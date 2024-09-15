@@ -74,6 +74,11 @@ const AppProvider = ({ children }) => {
           "/cylinder-edit",
           "/add-manufacturer",
           "/manufacturer-edit",
+          "/vendor-report",
+          "/manufacturer-report",
+          "/report-form",
+          "/report-one",
+          "/report-two",
           "/view-cylinder",
           "/user-view-cylinder",
         ];

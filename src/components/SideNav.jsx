@@ -14,7 +14,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavType = "dark";
 
   const sidenavTypes = {
-    dark: "bg-gradient-to-br from-gray-800 to-gray-900 shadow-lg shadow-blue-900",
+    dark: "bg-gradient-to-br from-blue-800 to-blue-900 shadow-lg shadow-blue-900",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
@@ -174,6 +174,46 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                     className="font-medium capitalize"
                   >
                     Vendor Report
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/manufacturer-report">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Manufacturer Report
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/report-form">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Report
                   </Typography>
                 </Button>
               )}

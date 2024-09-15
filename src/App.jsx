@@ -21,6 +21,11 @@ import ViewCylinder from "./pages/ViewCylinder/ViewCylinder";
 import UserViewCylinder from "./pages/userPage/UserViewCylinder";
 import { useContext, useEffect, useState } from "react";
 import { ContextPanel } from "./utils/ContextPanel";
+import ReportVendor from "./pages/reports/vendor/ReportVendor";
+import ReportManufacturer from "./pages/reports/manufacturer/ReportManufacturer";
+import ReportForm from "./pages/reports/report/ReportForm";
+import ReportOne from "./pages/reports/report/ReportOne";
+import ReportTwo from "./pages/reports/report/ReportTwo";
 
 const App = () => {
   const { userInfo, setUserInfo } = useContext(ContextPanel);
@@ -86,6 +91,14 @@ const App = () => {
                   <Route path="/cylinder-edit/:id" element={<CylinderEdit />} />
                   <Route path="/cylinder-view/:id" element={<CylView />} />
                   <Route path="/view-cylinder" element={<ViewCylinder />} />
+                  <Route path="/vendor-report" element={<ReportVendor />} />
+                  <Route
+                    path="/manufacturer-report"
+                    element={<ReportManufacturer />}
+                  />
+                  <Route path="/report-form" element={<ReportForm />} />
+                  <Route path="/report-one" element={<ReportOne />} />
+                  <Route path="/report-two" element={<ReportTwo />} />
                 </>
               )}
             {(userInfo.branchId === 1 || userInfo.branchId === 2) &&

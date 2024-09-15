@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { Button, TextField } from "@mui/material";
 import { FaRegCalendarAlt, FaIndustry, FaWeightHanging } from "react-icons/fa";
 import Moment from "moment";
@@ -8,16 +8,55 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 
+import ScannerModel from "../../components/ScannerModel";
+import { IoIosQrScanner } from "react-icons/io";
+import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react";
+
 const ViewCylinder = () => {
   const [latestid, setLatestid] = useState("");
   const [cylinders, setCylinders] = useState([]);
   const [message, setMessage] = useState("");
   const testRef = useRef(null);
   const componentRef = useRef(null);
-
   const [loading, setLoading] = useState(false);
+  // const [showModal, setShowModal] = useState(false); // State for handling modal
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
+  const [showmodal, setShowmodal] = useState(false);
+  const [ids, setId] = useState();
+
+  const closegroupModal = () => {
+    console.log("Closing modal");
+    setShowmodal(false);
+  };
+
+  const openmodal = () => {
+    console.log("Opening modal");
+    setShowmodal(true);
+  };
+
+  // for barcode only
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${ids}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCylinders(response.data.cylinderSub);
+    };
+    if (ids) fetchData();
+  }, [ids]);
+
+  const barcodeScannerValue = (value) => {
+    console.log("Barcode scanned:", value);
+    setShowmodal(false);
+    setId(value);
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -54,6 +93,24 @@ const ViewCylinder = () => {
     }
   };
 
+  const checkBarcode = async (value) => {
+    const barcodeId = value;
+    if (barcodeId.length === 6) {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCylinders(response.data.cylinderSub);
+      testRef.current.focus();
+      setLatestid("");
+    }
+  };
+
   return (
     <Layout>
       <div className="p-4">
@@ -62,7 +119,12 @@ const ViewCylinder = () => {
           <div className="card bg-white shadow-md rounded-lg p-4">
             <form id="addIndiv" autoComplete="off" onSubmit={onSubmit}>
               <div className="flex flex-wrap">
-                <div className="w-full md:w-1/3 mb-4">
+                <div className="w-full md:w-1/3 mb-4 flex items-center">
+                  <IoIosQrScanner
+                    className="mdi mdi-barcode-scan mdi-48px menu-icon"
+                    style={{ cursor: "pointer", marginRight: "1rem" }}
+                    onClick={openmodal}
+                  ></IoIosQrScanner>
                   <TextField
                     id="select-corrpreffer"
                     autoFocus
@@ -73,6 +135,7 @@ const ViewCylinder = () => {
                     value={latestid}
                     onChange={(e) => {
                       setLatestid(e.target.value);
+                      checkBarcode(e.target.value);
                     }}
                     fullWidth
                     variant="outlined"
@@ -177,6 +240,21 @@ const ViewCylinder = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal for barcode scanner */}
+      <Dialog open={showmodal} handler={closegroupModal} size="lg">
+        <DialogBody className="h-[400px]">
+          <ScannerModel barcodeScannerValue={barcodeScannerValue} />
+        </DialogBody>
+        <DialogFooter>
+          <button
+            onClick={closegroupModal}
+            className="mr-4 px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+          >
+            Close
+          </button>
+        </DialogFooter>
+      </Dialog>
     </Layout>
   );
 };

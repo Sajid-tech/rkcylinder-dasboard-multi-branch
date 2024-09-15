@@ -1,34 +1,37 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
+import { ContextPanel } from "../../../utils/ContextPanel";
+import { useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
 import { IconButton } from "@material-tailwind/react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { FaRegFilePdf } from "react-icons/fa";
 
-const ReportVendor = () => {
-  const [vendorReport, setVendorReport] = useState(null);
+const ReportTwo = () => {
+  const [reporttwo, setReportTwo] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
   const tableRef = useRef(null);
-
   useEffect(() => {
-    const fetchVendorReprot = async () => {
+    const fetchReprottwo = async () => {
       try {
         if (!isPanelUp) {
           navigate("/maintenance");
           return;
         }
         setLoading(true);
+        const data = {
+          cylinder_date_from: localStorage.getItem("cylinder_date_from"),
+          cylinder_date_to: localStorage.getItem("cylinder_date_to"),
+        };
         const token = localStorage.getItem("token");
         const response = await axios.post(
-          `${BASE_URL}/api/fetch-vendor-report`,
-          {},
+          `${BASE_URL}/api/fetch-report2-report`,
+          data,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -36,15 +39,15 @@ const ReportVendor = () => {
           }
         );
 
-        setVendorReport(response.data?.vendor);
-        console.log("vendor report", response.data.vendor);
+        setReportTwo(response.data?.cylinder);
+        console.log("Two report", response.data.cylinder);
       } catch (error) {
-        console.error("Error fetching vendor report data", error);
+        console.error("Error fetching two report data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchVendorReprot();
+    fetchReprottwo();
     setLoading(false);
   }, []);
 
@@ -71,50 +74,56 @@ const ReportVendor = () => {
       pdf.save("vendor-report.pdf");
     });
   };
+
   const columns = [
     {
-      name: "vendor_name",
-      label: "Name",
+      name: "cylinder_sub_barcode",
+      label: "R K Serial No",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "vendor_address",
-      label: "Address",
+      name: "manufacturer_name",
+      label: "Make",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+
+    {
+      name: "cylinder_sub_manufacturer_month",
+      label: "Month/Year",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value, tableMeta) => {
+          const cylinder_sub_manufacturer_month = tableMeta.rowData[2];
+          const cylinder_sub_manufacturer_year = tableMeta.rowData[3];
+          return `${cylinder_sub_manufacturer_month}/${cylinder_sub_manufacturer_year}`;
+        },
+      },
+    },
+    {
+      name: "cylinder_sub_manufacturer_year",
+      label: "Year",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "cylinder_sub_batch_no",
+      label: "Batch No",
       options: {
         filter: true,
         sort: false,
       },
     },
     {
-      name: "vendor_state",
-      label: "State",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "vendor_mobile",
-      label: "Mobile",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "vendor_email",
-      label: "Email",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "vendor_status",
-      label: "Status",
+      name: "cylinder_sub_weight",
+      label: "Tare Weight",
       options: {
         filter: true,
         sort: false,
@@ -125,13 +134,13 @@ const ReportVendor = () => {
   const options = {
     selectableRows: "none",
     elevation: 0,
-    pagination: false,
+    // pagination: false,
     search: false,
     filter: false,
-    rowsPerPage: 100000, // Set to a large number to show all rows
-    rowsPerPageOptions: [], // Empty array to hide rows per page dropdown
-    // rowsPerPage: 5,
-    // rowsPerPageOptions: [5, 10, 25],
+    // rowsPerPage: 100000, // Set to a large number to show all rows
+    // rowsPerPageOptions: [], // Empty array to hide rows per page dropdown
+    rowsPerPage: 5,
+    rowsPerPageOptions: [5, 10, 25],
     responsive: "standard",
     viewColumns: false,
     // Add custom toolbar for PDF export
@@ -148,18 +157,17 @@ const ReportVendor = () => {
       );
     },
   };
-
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
         <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
-          Vendor Report
+          Report Two
         </h3>
       </div>
 
       <div className="mt-5" ref={tableRef}>
         <MUIDataTable
-          data={vendorReport ? vendorReport : []}
+          data={reporttwo ? reporttwo : []}
           columns={columns}
           options={options}
         />
@@ -168,4 +176,4 @@ const ReportVendor = () => {
   );
 };
 
-export default ReportVendor;
+export default ReportTwo;

@@ -55,7 +55,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
       color={fixedNavbar ? "white" : "transparent"}
       className={`rounded-xl transition-all ${
         fixedNavbar
-          ? "sticky top-4 z-40 py-3 bg-gradient-to-br from-gray-800 text-white to-gray-700  shadow-lg  shadow-blue-900"
+          ? "sticky top-4 z-40 py-3 bg-gradient-to-br from-blue-800 text-white to-blue-700  shadow-lg  shadow-blue-900"
           : "px-0 py-1"
       }`}
       fullWidth
