@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 
-import ScannerModel from "../../components/ScannerModel";
 import { IoIosQrScanner } from "react-icons/io";
 import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react";
 
