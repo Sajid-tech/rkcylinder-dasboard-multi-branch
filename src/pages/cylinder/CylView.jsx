@@ -99,6 +99,7 @@ const CylView = () => {
             <div>Month/Year</div>
             <div>Batch No</div>
             <div>Tare Weight</div>
+            <div>Action</div> {/* Add Action header */}
           </div>
 
           {/* Table Rows */}
@@ -116,6 +117,14 @@ const CylView = () => {
               </div>
               <div>{cylinder.cylinder_sub_batch_no}</div>
               <div>{cylinder.cylinder_sub_weight}</div>
+              <div>
+                {/* Edit Button for each sub-cylinder */}
+                <Link to={`/cylinder-edit/${id}?subId=${cylinder.id}`}>
+                  <Button className="bg-blue-500 text-white hover:bg-blue-600">
+                    Edit
+                  </Button>
+                </Link>
+              </div>
             </div>
           ))}
 

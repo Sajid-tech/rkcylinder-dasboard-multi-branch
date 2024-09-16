@@ -19,15 +19,15 @@ const ViewCylinder = () => {
   const testRef = useRef(null);
   const componentRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  // const [showModal, setShowModal] = useState(false); // State for handling modal
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
   const [showmodal, setShowmodal] = useState(false);
-  const [ids, setId] = useState();
+  const [id, setId] = useState();
 
   const closegroupModal = () => {
     console.log("Closing modal");
     setShowmodal(false);
+    window.location.reload();
   };
 
   const openmodal = () => {
@@ -35,12 +35,18 @@ const ViewCylinder = () => {
     setShowmodal(true);
   };
 
+  const barcodeScannerValue = (value) => {
+    console.log("Barcode scanned:", value);
+    setShowmodal(false);
+    setId(value);
+  };
+
   // for barcode only
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${ids}`,
+        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,14 +55,11 @@ const ViewCylinder = () => {
       );
       setCylinders(response.data.cylinderSub);
     };
-    if (ids) fetchData();
-  }, [ids]);
-
-  const barcodeScannerValue = (value) => {
-    console.log("Barcode scanned:", value);
-    setShowmodal(false);
-    setId(value);
-  };
+    if (id) {
+      fetchData();
+      return;
+    }
+  }, [id]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

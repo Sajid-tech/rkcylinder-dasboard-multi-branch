@@ -26,6 +26,8 @@ import ReportManufacturer from "./pages/reports/manufacturer/ReportManufacturer"
 import ReportForm from "./pages/reports/report/ReportForm";
 import ReportOne from "./pages/reports/report/ReportOne";
 import ReportTwo from "./pages/reports/report/ReportTwo";
+import FormCylinderDetails from "./pages/reports/cylinderReport/FormCylinderDetails";
+import ReportCylinderDetails from "./pages/reports/cylinderReport/ReportCylinderDetails";
 
 const App = () => {
   const { userInfo, setUserInfo } = useContext(ContextPanel);
@@ -99,6 +101,14 @@ const App = () => {
                   <Route path="/report-form" element={<ReportForm />} />
                   <Route path="/report-one" element={<ReportOne />} />
                   <Route path="/report-two" element={<ReportTwo />} />
+                  <Route
+                    path="/cylinder-details"
+                    element={<FormCylinderDetails />}
+                  />
+                  <Route
+                    path="/report-cylinder"
+                    element={<ReportCylinderDetails />}
+                  />
                 </>
               )}
             {(userInfo.branchId === 1 || userInfo.branchId === 2) &&

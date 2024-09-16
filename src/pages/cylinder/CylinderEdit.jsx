@@ -1,5 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { TextField, MenuItem, Button } from "@mui/material";
 import { FiEdit } from "react-icons/fi";
 import Layout from "../../layout/Layout";
@@ -8,303 +13,274 @@ import axios from "axios";
 import { ContextPanel } from "../../utils/ContextPanel";
 
 const CylinderEdit = () => {
-  //   const { id } = useParams(); // Get the id from the URL params
+  const { id } = useParams(); // Get the main cylinder ID from URL params
+  const [searchParams] = useSearchParams();
+  const subId = searchParams.get("subId"); // Get the sub-cylinder ID from the query params
 
-  //   // State for cylinder main data
-  //   const [cylinder, setCylinder] = useState({
-  //     cylinder_date: "",
-  //     cylinder_batch_nos: "",
-  //     cylinder_vendor_id: "",
-  //   });
+  const [cylinder, setCylinder] = useState({
+    cylinder_date: "",
+    cylinder_batch_nos: "",
+    cylinder_vendor_id: "",
+  });
 
-  //   // State for the list of users (sub-cylinders)
-  //   const [users, setUsers] = useState([
-  //     // Example user object structure for initializing
-  //     {
-  //       id: "",
-  //       cylinder_sub_barcode: "",
-  //       cylinder_sub_company_no: "",
-  //       cylinder_sub_manufacturer_id: "",
-  //       cylinder_sub_manufacturer_month: "",
-  //       cylinder_sub_manufacturer_year: "",
-  //       cylinder_sub_batch_no: "",
-  //       cylinder_sub_weight: "",
-  //     },
-  //   ]);
-  //   const [loading, setLoading] = useState(false);
-  //   const { isPanelUp } = useContext(ContextPanel);
-  //   const navigate = useNavigate();
+  const [subCylinder, setSubCylinder] = useState({
+    cylinder_sub_barcode: "",
+    cylinder_sub_company_no: "",
+    cylinder_sub_manufacturer_id: "",
+    cylinder_sub_manufacturer_month: "",
+    cylinder_sub_manufacturer_year: "",
+    cylinder_sub_batch_no: "",
+    cylinder_sub_weight: "",
+  });
 
-  //   // State for dropdown options
-  //   const [vendor, setVendor] = useState({
-  //     vendor_name: "",
-  //   });
-  //   const [manufacturer, setManufacturer] = useState([]);
-  //   const [month, setMonth] = useState([
-  //     { label: "January", value: "01" },
-  //     { label: "February", value: "02" },
-  //     { label: "March", value: "03" },
-  //     // Add more months as needed
-  //   ]);
+  const [vendor, setVendor] = useState([]);
 
-  //   // Button disable state
-  //   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  // const [manufacturer, setManufacturer] = useState([]);
+  const [month, setMonth] = useState([
+    { label: "January", value: "01" },
+    { label: "February", value: "02" },
+    { label: "March", value: "03" },
+    { label: "April", value: "04" },
+    { label: "May", value: "05" },
+    { label: "June", value: "06" },
+    { label: "July", value: "07" },
+    { label: "August", value: "08" },
+    { label: "September", value: "09" },
+    { label: "October", value: "10" },
+    { label: "November", value: "11" },
+    { label: "December", value: "12" },
+  ]);
+  const [loading, setLoading] = useState(false);
+  const { isPanelUp } = useContext(ContextPanel);
+  const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     //setcylinder and set user
-  //     const fetchCylVenUser = async () => {
-  //       try {
-  //         if (!isPanelUp) {
-  //           navigate("/maintenance");
-  //           return;
-  //         }
-  //         setLoading(true);
-  //         const token = localStorage.getItem("token");
-  //         const response = await axios.get(
-  //           `${BASE_URL}/api/web-fetch-cylinder-by-id/${id}`,
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${token}`,
-  //             },
-  //           }
-  //         );
+  useEffect(() => {
+    const fetchCylinderData = async () => {
+      try {
+        if (!isPanelUp) {
+          navigate("/maintenance");
+          return;
+        }
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${BASE_URL}/api/web-fetch-cylinder-by-id/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-  //         setUsers(response.data.cylinderSub);
-  //         setVendor(response.data.vendor);
-  //         setCylinder(response.data.cylinder);
-  //       } catch (error) {
-  //         console.error("Error fetching dashboard data", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-  //     fetchCylVenUser();
-  //     setLoading(false);
-  //   }, []);
+        const { cylinder, cylinderSub } = response.data;
+        setCylinder(cylinder);
+        setVendor(response.data?.vendor);
+        // setManufacturer(manufacturers);
 
-  //   const checkButtonState = () => {
-  //     // Logic to enable/disable the button
-  //     const isFormValid =
-  //       cylinder.cylinder_date &&
-  //       users.every((user) => user.cylinder_sub_company_no);
-  //     setIsButtonDisabled(!isFormValid);
-  //   };
+        // If there's a sub-cylinder ID in the query params, filter the data to get that specific sub-cylinder
+        if (subId) {
+          const selectedSubCylinder = cylinderSub.find(
+            (sub) => sub.id === parseInt(subId)
+          );
+          if (selectedSubCylinder) {
+            setSubCylinder(selectedSubCylinder);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching cylinder data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCylinderData();
+  }, [subId]);
 
-  //   // Handle changes for the main cylinder form
-  //   const onInputChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setCylinder({
-  //       ...cylinder,
-  //       [name]: value,
-  //     });
-  //   };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setSubCylinder((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-  //   // Handle changes for users (sub-cylinders)
-  //   const onChange = (e, index) => {
-  //     const { name, value } = e.target;
-  //     const updatedUsers = [...users];
-  //     updatedUsers[index][name] = value;
-  //     setUsers(updatedUsers);
-  //   };
+  const handleCylinderChange = (event) => {
+    const { name, value } = event.target;
+    setCylinder((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-  //   // Form submit handler
-  //   const onSubmit = (e) => {
-  //     e.preventDefault();
-  //     // Submit logic (e.g., API call to update the cylinder and users)
-  //     console.log("Form submitted", { cylinder, users });
-  //   };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      setLoading(true);
+      const response = await axios.put(
+        `${BASE_URL}/api/web-update-cylinder/${id}`,
+        {
+          ...cylinder,
+          ...subCylinder,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      navigate(`/cylinder-view/${id}`);
+    } catch (error) {
+      console.error("Error updating the cylinder data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout>
-      <div className="p-6 bg-white mt-5 rounded-lg">
+      <div className="p-4 sm:p-6">
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-            <FiEdit className="text-lg" />
-            Edit Cylinder
+          <h3 className="text-xl sm:text-2xl font-bold">
+            {subId ? "Edit Sub-Cylinder" : "Edit Cylinder"}
           </h3>
         </div>
 
-        <form id="addIndiv" autoComplete="off" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="form-group">
-              <TextField
-                fullWidth
-                required
-                InputLabelProps={{ shrink: true }}
-                type="date"
-                label="Date"
-                name="cylinder_date"
-                // value={cylinder.cylinder_date}
-                // onChange={(e) => onInputChange(e)}
-              />
-            </div>
-
-            <div className="form-group">
-              <TextField
-                required
-                label="R K Batch No"
-                name="cylinder_batch_nos"
-                // value={cylinder.cylinder_batch_nos}
-                // onChange={(e) => onInputChange(e)}
-                fullWidth
-              />
-            </div>
-
-            <div className="form-group">
-              <TextField
-                fullWidth
-                label="Vendor"
-                required
-                select
-                name="cylinder_vendor_id"
-                // value={cylinder.cylinder_vendor_id}
-                // onChange={(e) => onInputChange(e)}
-              >
-                {/* {vendor.map((item, key) => (
-                  <MenuItem key={key} value={item.id}>
-                    {item.vendor_name}
-                  </MenuItem>
-                ))} */}
-              </TextField>
-            </div>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 shadow rounded-md"
+        >
+          {/* Fields for main cylinder */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+            <TextField
+              label="Date"
+              name="cylinder_date"
+              value={cylinder.cylinder_date}
+              onChange={handleCylinderChange}
+              fullWidth
+              variant="outlined"
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              label="R K Batch No"
+              name="cylinder_batch_nos"
+              value={cylinder.cylinder_batch_nos}
+              onChange={handleCylinderChange}
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              select
+              label="Vendor"
+              name="cylinder_vendor_id"
+              value={cylinder.cylinder_vendor_id}
+              onChange={handleCylinderChange}
+              fullWidth
+              variant="outlined"
+            >
+              {(Array.isArray(vendor) ? vendor : []).map((c_vendor, key) => (
+                <MenuItem key={key} value={c_vendor.id}>
+                  {c_vendor.vendor_name}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
 
-          <hr className="my-6 border-t border-gray-300" />
-
-          {/* {users.map((user, index) => (
-            <div
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
-              key={index}
+          {/* Fields for sub-cylinder */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+            <TextField
+              label="R K Serial No"
+              name="cylinder_sub_barcode"
+              value={subCylinder.cylinder_sub_barcode}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              label="Cylinder No"
+              name="cylinder_sub_company_no"
+              value={subCylinder.cylinder_sub_company_no}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            />
+            {/* <TextField
+              select
+              label="Manufacturer"
+              name="cylinder_sub_manufacturer_id"
+              value={subCylinder.cylinder_sub_manufacturer_id}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
             >
-              <div className="form-group">
-                <TextField
-                  required
-                  label="R K Serial No"
-                  name="cylinder_sub_barcode"
-                  InputLabelProps={{ shrink: true }}
-                  value={user.cylinder_sub_barcode}
-                  onChange={(e) => onChange(e, index)}
-                  disabled
-                  fullWidth
-                />
-              </div>
+              {manufacturer.map((manu) => (
+                <MenuItem key={manu.id} value={manu.id}>
+                  {manu.name}
+                </MenuItem>
+              ))}
+            </TextField> */}
+            <TextField
+              select
+              label="Month"
+              name="cylinder_sub_manufacturer_month"
+              value={subCylinder.cylinder_sub_manufacturer_month}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            >
+              {month.map((m) => (
+                <MenuItem key={m.value} value={m.value}>
+                  {m.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="Year"
+              name="cylinder_sub_manufacturer_year"
+              value={subCylinder.cylinder_sub_manufacturer_year}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              label="Batch No"
+              name="cylinder_sub_batch_no"
+              value={subCylinder.cylinder_sub_batch_no}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            />
+            <TextField
+              label="Tare Weight"
+              name="cylinder_sub_weight"
+              value={subCylinder.cylinder_sub_weight}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+            />
+          </div>
 
-              <div className="form-group hidden">
-                <TextField
-                  required
-                  label="id"
-                  name="cylinder_sub_id"
-                  value={user.id}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                />
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Cylinder No"
-                  name="cylinder_sub_company_no"
-                  inputProps={{ maxLength: 10, minLength: 1 }}
-                  value={user.cylinder_sub_company_no}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                />
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Manufacturer"
-                  name="cylinder_sub_manufacturer_id"
-                  select
-                  value={user.cylinder_sub_manufacturer_id}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                >
-                  {manufacturer.map((c_manufacturer, key) => (
-                    <MenuItem key={key} value={c_manufacturer.id}>
-                      {c_manufacturer.manufacturer_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Month"
-                  name="cylinder_sub_manufacturer_month"
-                  select
-                  value={user.cylinder_sub_manufacturer_month}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                >
-                  {month.map((c_month, key) => (
-                    <MenuItem key={key} value={c_month.value}>
-                      {c_month.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Year"
-                  name="cylinder_sub_manufacturer_year"
-                  inputProps={{ maxLength: 2, minLength: 2 }}
-                  value={user.cylinder_sub_manufacturer_year}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                />
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Batch No"
-                  name="cylinder_sub_batch_no"
-                  value={user.cylinder_sub_batch_no}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                />
-              </div>
-
-              <div className="form-group">
-                <TextField
-                  required
-                  label="Tare Weight"
-                  name="cylinder_sub_weight"
-                  inputProps={{ maxLength: 5 }}
-                  value={user.cylinder_sub_weight}
-                  onChange={(e) => onChange(e, index)}
-                  fullWidth
-                />
-              </div>
-            </div>
-          ))} */}
-
-          <div className="flex justify-start space-x-4">
+          <div className="flex justify-end mt-6">
             <Button
               type="submit"
-              //   onClick={(e) => onSubmit(e)}
-              //   disabled={isButtonDisabled}
               variant="contained"
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              color="primary"
+              disabled={loading}
             >
-              Update
+              {loading ? "Saving..." : "Save Changes"}
             </Button>
-
-            <Link to="../cylinder">
-              <Button
-                variant="outlined"
-                className="border border-gray-400 text-gray-600 hover:bg-gray-100"
-              >
-                Cancel
-              </Button>
-            </Link>
           </div>
         </form>
+
+        <div className="mt-6">
+          <Link to={`/cylinder-view/${id}`}>
+            <Button variant="outlined" color="secondary">
+              Back to Cylinder View
+            </Button>
+          </Link>
+        </div>
       </div>
     </Layout>
   );

@@ -57,7 +57,7 @@ const Cylinder = () => {
     },
     {
       name: "vendor_name",
-      label: "Name",
+      label: "Vendor",
       options: {
         filter: true,
         sort: true,
@@ -81,7 +81,7 @@ const Cylinder = () => {
     },
     {
       name: "cylinder_batch_nos",
-      label: "Bath no",
+      label: "R K Batch no",
       options: {
         filter: true,
         sort: false,

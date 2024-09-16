@@ -200,6 +200,26 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/cylinder-details">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Cylinder Details
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/report-form">
               {({ isActive }) => (
                 <Button

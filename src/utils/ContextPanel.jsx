@@ -79,6 +79,8 @@ const AppProvider = ({ children }) => {
           "/report-form",
           "/report-one",
           "/report-two",
+          "/cylinder-details",
+          "/report-cylinder",
           "/view-cylinder",
           "/user-view-cylinder",
         ];

@@ -89,168 +89,72 @@ const SignIn = () => {
         position="top-right"
         reverseOrder={false}
       />
-      <section className="flex flex-col lg:flex-row min-h-screen">
-        <div className="flex-1 lg:w-3/5 m-4 lg:m-12  px-4 lg:px-8">
-          <div className="text-center">
-            <Typography variant="h2" className="font-bold mb-4">
-              Sign In
-            </Typography>
-            <Typography
-              variant="paragraph"
-              color="blue-gray"
-              className="text-lg font-normal"
+      <section className="bg-gradient-to-r from-blue-100 to-blue-300 min-h-screen flex items-center justify-center animate-bgShift">
+        {/* Login container */}
+        <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
+          {/* Form */}
+          <div className="md:w-1/2 px-8 md:px-16">
+            <h2 className="font-bold text-2xl text-[#002D74]">Login</h2>
+            <p className="text-xs mt-4 text-[#002D74]">
+              If you are already a member, easily log in
+            </p>
+
+            <form
+              onSubmit={handleSumbit}
+              method="POST"
+              className="flex flex-col gap-4"
             >
-              Enter your email and password to Sign In.
-            </Typography>
-          </div>
-          <form
-            onSubmit={handleSumbit}
-            method="POST"
-            className="mt-8 mb-2 mx-auto w-full max-w-md lg:w-3/4"
-          >
-            <div className="mb-6 flex flex-col gap-6">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="-mb-3 font-medium"
-              >
-                Your email
-              </Typography>
-              <Input
-                id="email"
-                name="email"
+              <input
+                className="p-2 mt-8 rounded-xl border"
+                type="username"
+                name="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                size="lg"
-                placeholder="name@mail.com"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
+                placeholder="Email"
               />
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="-mb-3 font-medium"
-              >
-                Password
-              </Typography>
-              <Input
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                size="lg"
-                placeholder="********"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-              />
-            </div>
-            <Checkbox
-              label={
-                <Typography
-                  variant="small"
-                  color="gray"
-                  className="flex items-center justify-start font-medium"
-                >
-                  I agree to the&nbsp;
-                  <a
-                    href="#"
-                    className="font-normal text-black transition-colors hover:text-gray-900 underline"
-                  >
-                    Terms and Conditions
-                  </a>
-                </Typography>
-              }
-              containerProps={{ className: "-ml-2.5" }}
-            />
-            <Button type="sumbit" disabled={loading} className="mt-6" fullWidth>
-              {loading ? "Checking..." : "Sign In"}
-            </Button>
-
-            <div className="flex items-center justify-between gap-2 mt-6">
-              <Checkbox
-                label={
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="flex items-center justify-start font-medium"
-                  >
-                    Subscribe me to newsletter
-                  </Typography>
-                }
-                containerProps={{ className: "-ml-2.5" }}
-              />
-              <Typography variant="small" className="font-medium text-gray-900">
-                <Link to="/forget-password">Forgot Password</Link>
-              </Typography>
-            </div>
-            <div className="space-y-4 mt-8">
-              <Button
-                size="lg"
-                color="white"
-                className="flex items-center gap-2 justify-center shadow-md"
-                fullWidth
-              >
+              <div className="relative">
+                <input
+                  className="p-2 rounded-xl border w-full"
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
                 <svg
-                  width="17"
-                  height="16"
-                  viewBox="0 0 17 16"
-                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="gray"
+                  className="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2"
+                  viewBox="0 0 16 16"
                 >
-                  <g clipPath="url(#clip0_1156_824)">
-                    <path
-                      d="M16.3442 8.18429C16.3442 7.64047 16.3001 7.09371 16.206 6.55872H8.66016V9.63937H12.9813C12.802 10.6329 12.2258 11.5119 11.3822 12.0704V14.0693H13.9602C15.4741 12.6759 16.3442 10.6182 16.3442 8.18429Z"
-                      fill="#4285F4"
-                    />
-                    <path
-                      d="M8.65974 16.0006C10.8174 16.0006 12.637 15.2922 13.9627 14.0693L11.3847 12.0704C10.6675 12.5584 9.7415 12.8347 8.66268 12.8347C6.5756 12.8347 4.80598 11.4266 4.17104 9.53357H1.51074V11.5942C2.86882 14.2956 5.63494 16.0006 8.65974 16.0006Z"
-                      fill="#34A853"
-                    />
-                    <path
-                      d="M4.16852 9.53356C3.83341 8.53999 3.83341 7.46411 4.16852 6.47054V4.40991H1.51116C0.376489 6.67043 0.376489 9.33367 1.51116 11.5942L4.16852 9.53356Z"
-                      fill="#FBBC04"
-                    />
-                    <path
-                      d="M8.65974 3.16644C9.80029 3.1488 10.9026 3.57798 11.7286 4.36578L14.0127 2.08174C12.5664 0.72367 10.6469 -0.0229773 8.65974 0.000539111C5.63494 0.000539111 2.86882 1.70548 1.51074 4.40987L4.1681 6.4705C4.8001 4.57449 6.57266 3.16644 8.65974 3.16644Z"
-                      fill="#EA4335"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1156_824">
-                      <rect
-                        width="16"
-                        height="16"
-                        fill="white"
-                        transform="translate(0.5)"
-                      />
-                    </clipPath>
-                  </defs>
+                  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                 </svg>
-                <span>Sign in With Google</span>
-              </Button>
+              </div>
+              <button
+                type="sumbit"
+                disabled={loading}
+                className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300"
+              >
+                {loading ? "Checking..." : "Sign In"}
+              </button>
+            </form>
+
+            <div className="mt-5 text-xs  py-4 text-[#002D74]">
+              <Link to="/forget-password">Forgot your password?</Link>
             </div>
-            <Typography
-              variant="paragraph"
-              className="text-center text-blue-gray-500 font-medium mt-4"
-            >
-              Not registered?
-              <Link to="/register" className="text-gray-900 ml-1">
-                Create account
-              </Link>
-            </Typography>
-          </form>
-        </div>
-        <div className="w-full lg:w-2/5 h-auto lg:h-full hidden  lg:block">
-          <img
-            src="/img/pattern.png"
-            className="h-full max-h-screen w-full object-cover  rounded-none"
-            alt="Sign In Background"
-          />
+          </div>
+
+          {/* Image */}
+          <div className="md:block hidden w-1/2">
+            <img
+              className="rounded-2xl"
+              src="https://images.unsplash.com/photo-1616606103915-dea7be788566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80"
+              alt="Login illustration"
+            />
+          </div>
         </div>
       </section>
     </>
