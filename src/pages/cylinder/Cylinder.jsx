@@ -7,6 +7,7 @@ import BASE_URL from "../../base/BaseUrl";
 import { ContextPanel } from "../../utils/ContextPanel";
 import { CiSquarePlus } from "react-icons/ci";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import Moment from "moment";
 
 const Cylinder = () => {
   const [cylinderData, setCylinderData] = useState(null);
@@ -93,6 +94,9 @@ const Cylinder = () => {
       options: {
         filter: true,
         sort: false,
+        customBodyRender: (value) => {
+          return Moment(value).format("DD-MM-YYYY");
+        },
       },
     },
     {
@@ -110,7 +114,10 @@ const Cylinder = () => {
                 className="h-5 w-5 cursor-pointer"
               />
               <MdOutlineRemoveRedEye
-                onClick={() => navigate(`/cylinder-view/${id}`)}
+                onClick={() => {
+                  localStorage.setItem("viewedCylinderId", id);
+                  navigate(`/cylinder-view/${id}`);
+                }}
                 title="View Cylinder Info"
                 className="h-5 w-5 cursor-pointer"
               />
@@ -141,7 +148,7 @@ const Cylinder = () => {
           to="/add-cylinder"
           className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
         >
-          + Create List
+          + Create
         </Link>
       </div>
       <div className="mt-5">

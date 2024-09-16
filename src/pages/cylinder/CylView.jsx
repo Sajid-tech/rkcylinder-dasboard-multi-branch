@@ -8,6 +8,7 @@ import Layout from "../../layout/Layout";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
+import MUIDataTable from "mui-datatables";
 
 const CylView = () => {
   const { id } = useParams();
@@ -67,6 +68,102 @@ const CylView = () => {
     setLoading(false);
   }, []);
 
+  const columns = [
+    {
+      name: "cylinder_sub_barcode",
+      label: "R K Serial No",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "cylinder_sub_company_no",
+      label: "Cylinder No",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "manufacturer_name",
+      label: "Manufacturer",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+
+    {
+      name: "cylinder_sub_manufacturer_month",
+      label: "Month/Year",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value, tableMeta) => {
+          const cylinder_sub_manufacturer_month = tableMeta.rowData[3];
+          const cylinder_sub_manufacturer_year = tableMeta.rowData[4];
+          return `${cylinder_sub_manufacturer_month}/${cylinder_sub_manufacturer_year}`;
+        },
+      },
+    },
+    {
+      name: "cylinder_sub_manufacturer_year",
+      label: "Year",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "cylinder_sub_batch_no",
+      label: "Batch No",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "cylinder_sub_weight",
+      label: "Tare Weight",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "id",
+      label: "Action",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (id) => {
+          return (
+            <div className="flex items-center space-x-2">
+              <FaEdit
+                onClick={() => navigate(`/cylinder-edit/${id}`)}
+                title="Edit Sub Cylinder"
+                className="h-5 w-5 cursor-pointer"
+              />
+            </div>
+          );
+        },
+      },
+    },
+  ];
+
+  const options = {
+    selectableRows: "none",
+    elevation: 0,
+    print: false,
+    download: false,
+    search: true,
+    filter: true,
+    rowsPerPage: 5,
+    rowsPerPageOptions: [5, 10, 25],
+    responsive: "standard",
+    viewColumns: false,
+  };
+
   return (
     <Layout>
       <div className="p-4 sm:p-6">
@@ -91,57 +188,12 @@ const CylView = () => {
             </div>
           </div>
 
-          {/* Table Headers */}
-          <div className="hidden sm:grid grid-cols-3 md:grid-cols-6 gap-4 font-bold border-b border-gray-300 py-2">
-            <div>R K Serial No</div>
-            <div>Cylinder No</div>
-            <div>Manufacturer</div>
-            <div>Month/Year</div>
-            <div>Batch No</div>
-            <div>Tare Weight</div>
-            <div>Action</div> {/* Add Action header */}
-          </div>
-
-          {/* Table Rows */}
-          {cylindersSub.map((cylinder, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 border-b border-gray-200 py-2"
-            >
-              <div>{cylinder.cylinder_sub_barcode}</div>
-              <div>{cylinder.cylinder_sub_company_no}</div>
-              <div>{cylinder.manufacturer_name}</div>
-              <div>
-                {cylinder.cylinder_sub_manufacturer_month} /{" "}
-                {cylinder.cylinder_sub_manufacturer_year}
-              </div>
-              <div>{cylinder.cylinder_sub_batch_no}</div>
-              <div>{cylinder.cylinder_sub_weight}</div>
-              <div>
-                {/* Edit Button for each sub-cylinder */}
-                <Link to={`/cylinder-edit/${id}?subId=${cylinder.id}`}>
-                  <Button className="bg-blue-500 text-white hover:bg-blue-600">
-                    Edit
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
-            <Link to={`/cylinder-edit/${id}`}>
-              <Button className="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                <FaEdit className="mr-2" />
-                Edit Cylinder
-              </Button>
-            </Link>
-            <Link to="../cylinder">
-              <Button className="flex items-center justify-center bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
-                <FaArrowLeft className="mr-2" />
-                Back
-              </Button>
-            </Link>
+          <div className="mt-5">
+            <MUIDataTable
+              data={cylindersSub ? cylindersSub : []}
+              columns={columns}
+              options={options}
+            />
           </div>
         </div>
       </div>

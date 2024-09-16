@@ -6,6 +6,7 @@ import Layout from "../../layout/Layout";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddCylinder = () => {
   var today = new Date();
@@ -117,10 +118,10 @@ const AddCylinder = () => {
         }
       );
       if (response.data.code == "200") {
-        alert("success");
+        toast.success("Cylinder Add");
         navigate("/cylinder");
       } else {
-        alert("error");
+        toast.error("Error");
       }
     } catch (error) {
       console.error("Error creating maufacturer", error);
@@ -130,6 +131,22 @@ const AddCylinder = () => {
   };
   return (
     <Layout>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="p-6">
         <div className="mb-4">
           <h3 className="text-2xl font-bold">Add Cylinder</h3>
@@ -201,7 +218,7 @@ const AddCylinder = () => {
                     </>
                   )}
                 </Button>
-                <Link to="cylinder">
+                <Link to="/cylinder">
                   <Button className="flex items-center bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
                     <FaTimes className="mr-2" />
                     Cancel

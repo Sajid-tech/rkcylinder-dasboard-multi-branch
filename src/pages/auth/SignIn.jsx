@@ -34,6 +34,12 @@ const SignIn = () => {
       if (res.status === 200) {
         const { token, user } = res.data.UserInfo;
         if (token) {
+          if (user.branch_id === 1) {
+            // Block user with branchId === 1
+            toast.error("You cannot log in. Please contact the admin.");
+            setLoading(false);
+            return;
+          }
           // Store the token in localStorage
           localStorage.setItem("token", token);
           localStorage.setItem("branchId", user.branch_id);
@@ -94,6 +100,14 @@ const SignIn = () => {
         <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
           {/* Form */}
           <div className="md:w-1/2 px-8 md:px-16">
+            {/* Logo Image */}
+            <div className="flex justify-center mb-4">
+              <img
+                src="/rkcyllogo.png"
+                alt="RK Cylinder Logo"
+                className="h-14 w-auto rounded-lg  "
+              />
+            </div>
             <h2 className="font-bold text-2xl text-[#002D74]">Login</h2>
             <p className="text-xs mt-4 text-[#002D74]">
               If you are already a member, easily log in
@@ -151,7 +165,7 @@ const SignIn = () => {
           <div className="md:block hidden w-1/2">
             <img
               className="rounded-2xl"
-              src="https://images.unsplash.com/photo-1616606103915-dea7be788566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80"
+              src="/logo3.png"
               alt="Login illustration"
             />
           </div>

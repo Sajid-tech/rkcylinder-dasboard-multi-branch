@@ -7,6 +7,7 @@ import Layout from "../../../layout/Layout";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const status = [
   {
@@ -95,10 +96,10 @@ const EditManufacturer = () => {
         }
       );
       if (response.data.code == "200") {
-        alert("success");
+        toast.success("Manufacture Edited Succesfully");
         navigate("/manufacturer");
       } else {
-        alert("error");
+        toast.error("error");
       }
     } catch (error) {
       console.error("Error creating maufacturer", error);
@@ -112,6 +113,22 @@ const EditManufacturer = () => {
   //web-update-manufacturer
   return (
     <Layout>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="p-6">
         <div className="mb-4">
           <h3 className="text-2xl font-bold">Edit Manufacturer</h3>

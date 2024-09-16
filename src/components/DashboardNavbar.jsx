@@ -55,7 +55,7 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
       color={fixedNavbar ? "white" : "transparent"}
       className={`rounded-xl transition-all ${
         fixedNavbar
-          ? "sticky top-4 z-40 py-3 bg-gradient-to-br from-blue-800 text-white to-blue-700  shadow-lg  shadow-blue-900"
+          ? "sticky top-4 z-40 py-3 bg-gradient-to-br from-blue-300 text-white to-blue-700  shadow-lg  shadow-blue-900"
           : "px-0 py-1"
       }`}
       fullWidth
@@ -97,13 +97,13 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-white" />
           </IconButton>
           {/* profile icon  */}
-          <Menu
+          {/* <Menu
             open={profileMenuOpen}
             handler={setProfileMenuOpen}
             placement="bottom-end"
           >
             <MenuHandler>
-              <IconButton variant="text" color="orange">
+              <IconButton variant="text" color="white">
                 <UserCircleIcon className="h-5 w-5 text-red" />
               </IconButton>
             </MenuHandler>
@@ -119,9 +119,9 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
                 </Link>
               </MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
           {/* Settings icon */}
-          <IconButton variant="text" color="red" onClick={handleOpenLogout}>
+          <IconButton variant="text" color="white" onClick={handleOpenLogout}>
             <HiArrowRightStartOnRectangle className="h-5 w-5 text-red" />
           </IconButton>
         </div>

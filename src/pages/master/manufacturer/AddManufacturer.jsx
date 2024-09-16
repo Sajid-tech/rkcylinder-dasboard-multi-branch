@@ -6,6 +6,7 @@ import Layout from "../../../layout/Layout";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { ContextPanel } from "../../../utils/ContextPanel";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddManufacturer = () => {
   const [manufacturer, setManufacturer] = useState({
@@ -42,10 +43,10 @@ const AddManufacturer = () => {
         }
       );
       if (response.data.code == "200") {
-        alert("success");
+        toast.success("Manufacturer Added");
         navigate("/manufacturer");
       } else {
-        alert("error");
+        toast.error("error");
       }
     } catch (error) {
       console.error("Error creating maufacturer", error);
@@ -55,6 +56,22 @@ const AddManufacturer = () => {
   };
   return (
     <Layout>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="p-6">
         <div className="mb-4">
           <h3 className="text-2xl font-bold">Add Manufacturer</h3>

@@ -6,6 +6,7 @@ import Layout from "../../layout/Layout";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
+import toast, { Toaster } from "react-hot-toast";
 
 const month = [
   {
@@ -69,6 +70,9 @@ const AddCylinderSub = () => {
     cylinder_sub_manufacturer_year: "",
     cylinder_sub_batch_no: "",
     cylinder_sub_weight: "",
+    cylinder_sub_previous_test_date: "",
+    cylinder_sub_n_t_d: "",
+    cylinder_sub_n_weight: "",
   });
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
@@ -76,6 +80,12 @@ const AddCylinderSub = () => {
   const { id } = useParams();
 
   const [manufacturer, setManufacturer] = useState([]);
+  const [branchId, setBranchId] = useState("");
+  const [userTypeId, setUserTypeId] = useState("");
+  useEffect(() => {
+    setBranchId(localStorage.getItem("branchId"));
+    setUserTypeId(localStorage.getItem("userTypeId"));
+  }, []);
   useEffect(() => {
     const fetchManufactureData = async () => {
       try {
@@ -117,19 +127,43 @@ const AddCylinderSub = () => {
     }
     setLoading(true);
     try {
-      let dataNext = {
-        id: id,
-        cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
-        cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
-        cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
-        cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
-        cylinder_sub_manufacturer_id_new:
-          cylinder.cylinder_sub_manufacturer_id_new,
-        cylinder_sub_manufacturer_month:
-          cylinder.cylinder_sub_manufacturer_month,
-        cylinder_sub_manufacturer_year: cylinder.cylinder_sub_manufacturer_year,
-        cylinder_sub_weight: cylinder.cylinder_sub_weight,
-      };
+      let dataNext = {};
+      if (branchId === "1" && userTypeId === "2") {
+        dataNext = {
+          id: id,
+          cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
+          cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
+          cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_id_new:
+            cylinder.cylinder_sub_manufacturer_id_new,
+          cylinder_sub_manufacturer_month:
+            cylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            cylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_weight: cylinder.cylinder_sub_weight,
+        };
+      } else if (branchId === "2" && userTypeId === "2") {
+        dataNext = {
+          id: id,
+          cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
+          cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
+          cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_id_new:
+            cylinder.cylinder_sub_manufacturer_id_new,
+          cylinder_sub_manufacturer_month:
+            cylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            cylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_weight: cylinder.cylinder_sub_weight,
+          cylinder_sub_previous_test_date:
+            cylinder.cylinder_sub_previous_test_date,
+          cylinder_sub_n_t_d: cylinder.cylinder_sub_n_t_d,
+          cylinder_sub_n_weight: cylinder.cylinder_sub_n_weight,
+        };
+      }
+
       const token = localStorage.getItem("token");
       const response = await axios.post(
         `${BASE_URL}/api/web-create-cylinder-sub`,
@@ -141,10 +175,23 @@ const AddCylinderSub = () => {
         }
       );
       if (response.data.code == "200") {
-        alert("success , sumbit and next");
+        toast.success("sub cylinder details Added ");
         navigate(`/add-sub-cylinder/${id}`);
+        setCylinder({
+          cylinder_sub_barcode: "",
+          cylinder_sub_company_no: "",
+          cylinder_sub_manufacturer_id: "",
+          cylinder_sub_manufacturer_id_new: "",
+          cylinder_sub_manufacturer_month: "",
+          cylinder_sub_manufacturer_year: "",
+          cylinder_sub_batch_no: "",
+          cylinder_sub_weight: "",
+          cylinder_sub_previous_test_date: "",
+          cylinder_sub_n_t_d: "",
+          cylinder_sub_n_weight: "",
+        });
       } else {
-        alert("error");
+        toast.error("error");
       }
     } catch (error) {
       console.error("Error creating maufacturer", error);
@@ -161,19 +208,43 @@ const AddCylinderSub = () => {
     }
     setLoading(true);
     try {
-      let dataSub = {
-        id: id,
-        cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
-        cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
-        cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
-        cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
-        cylinder_sub_manufacturer_id_new:
-          cylinder.cylinder_sub_manufacturer_id_new,
-        cylinder_sub_manufacturer_month:
-          cylinder.cylinder_sub_manufacturer_month,
-        cylinder_sub_manufacturer_year: cylinder.cylinder_sub_manufacturer_year,
-        cylinder_sub_weight: cylinder.cylinder_sub_weight,
-      };
+      let dataSub = {};
+      if (branchId === "1" && userTypeId === "2") {
+        dataSub = {
+          id: id,
+          cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
+          cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
+          cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_id_new:
+            cylinder.cylinder_sub_manufacturer_id_new,
+          cylinder_sub_manufacturer_month:
+            cylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            cylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_weight: cylinder.cylinder_sub_weight,
+        };
+      } else if (branchId === "2" && userTypeId === "2") {
+        dataSub = {
+          id: id,
+          cylinder_sub_barcode: cylinder.cylinder_sub_barcode,
+          cylinder_sub_batch_no: cylinder.cylinder_sub_batch_no,
+          cylinder_sub_company_no: cylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id: cylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_id_new:
+            cylinder.cylinder_sub_manufacturer_id_new,
+          cylinder_sub_manufacturer_month:
+            cylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            cylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_weight: cylinder.cylinder_sub_weight,
+          cylinder_sub_previous_test_date:
+            cylinder.cylinder_sub_previous_test_date,
+          cylinder_sub_n_t_d: cylinder.cylinder_sub_n_t_d,
+          cylinder_sub_n_weight: cylinder.cylinder_sub_n_weight,
+        };
+      }
+
       const token = localStorage.getItem("token");
       const response = await axios.post(
         `${BASE_URL}/api/web-create-cylinder-sub`,
@@ -185,10 +256,10 @@ const AddCylinderSub = () => {
         }
       );
       if (response.data.code == "200") {
-        alert("success");
+        toast.success("sub Cylinder Details Added");
         navigate("/cylinder");
       } else {
-        alert("error");
+        toast.error("error");
       }
     } catch (error) {
       console.error("Error creating maufacturer", error);
@@ -198,6 +269,22 @@ const AddCylinderSub = () => {
   };
   return (
     <Layout>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="p-6">
         <div className="mb-4">
           <h3 className="text-2xl font-bold">Add Sub Cylinder</h3>
@@ -313,6 +400,47 @@ const AddCylinderSub = () => {
                   fullWidth
                 />
               </div>
+              {/* from here it is only for branch 2  */}
+              {branchId === "2" && userTypeId === "2" && (
+                <>
+                  <div className="mb-4">
+                    <TextField
+                      id="select-corrpreffer"
+                      required
+                      label="Previous Test Date"
+                      name="cylinder_sub_previous_test_date"
+                      inputProps={{ maxLength: 5 }}
+                      value={cylinder.cylinder_sub_previous_test_date}
+                      onChange={onInputChange}
+                      fullWidth
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <TextField
+                      id="select-corrpreffer"
+                      required
+                      label="Next Test Date"
+                      name="cylinder_sub_n_t_d"
+                      inputProps={{ maxLength: 5 }}
+                      value={cylinder.cylinder_sub_n_t_d}
+                      onChange={onInputChange}
+                      fullWidth
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <TextField
+                      id="select-corrpreffer"
+                      required
+                      label="New Tare Weight(Kg)"
+                      name="cylinder_sub_n_weight"
+                      inputProps={{ maxLength: 5 }}
+                      value={cylinder.cylinder_sub_n_weight}
+                      onChange={onInputChange}
+                      fullWidth
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="flex space-x-4">

@@ -11,17 +11,12 @@ import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
 import axios from "axios";
 import { ContextPanel } from "../../utils/ContextPanel";
+import toast, { Toaster } from "react-hot-toast";
 
 const CylinderEdit = () => {
   const { id } = useParams(); // Get the main cylinder ID from URL params
   const [searchParams] = useSearchParams();
   const subId = searchParams.get("subId"); // Get the sub-cylinder ID from the query params
-
-  const [cylinder, setCylinder] = useState({
-    cylinder_date: "",
-    cylinder_batch_nos: "",
-    cylinder_vendor_id: "",
-  });
 
   const [subCylinder, setSubCylinder] = useState({
     cylinder_sub_barcode: "",
@@ -31,11 +26,30 @@ const CylinderEdit = () => {
     cylinder_sub_manufacturer_year: "",
     cylinder_sub_batch_no: "",
     cylinder_sub_weight: "",
+    cylinder_sub_status: "",
+    cylinder_sub_previous_test_date: "",
+    cylinder_sub_d_d: "",
+    cylinder_sub_c_d: "",
+    cylinder_sub_v_ii: "",
+    cylinder_sub_v_ie: "",
+    cylinder_sub_r_c: "",
+    cylinder_sub_bung_check: "",
+    cylinder_sub_h_t: "",
+    cylinder_sub_p_p: "",
+    cylinder_sub_p: "",
+    cylinder_sub_n_weight: "",
+    cylinder_sub_f_i: "",
+    cylinder_sub_p_t: "",
+    cylinder_sub_n_t_d: "",
   });
 
-  const [vendor, setVendor] = useState([]);
-
-  // const [manufacturer, setManufacturer] = useState([]);
+  const [manufacturer, setManufacturer] = useState([]);
+  const [branchId, setBranchId] = useState("");
+  const [userTypeId, setUserTypeId] = useState("");
+  useEffect(() => {
+    setBranchId(localStorage.getItem("branchId"));
+    setUserTypeId(localStorage.getItem("userTypeId"));
+  }, []);
   const [month, setMonth] = useState([
     { label: "January", value: "01" },
     { label: "February", value: "02" },
@@ -50,12 +64,49 @@ const CylinderEdit = () => {
     { label: "November", value: "11" },
     { label: "December", value: "12" },
   ]);
+  const [yesNo, setYesNo] = useState([{ value: "Yes" }, { value: "No" }]);
+  const [aR, setAR] = useState([{ value: "Accepted" }, { value: "Rejected" }]);
+  const [okRejected, setOkRejected] = useState([
+    { value: "Ok" },
+    { value: "Rejected" },
+  ]);
+  const [rtRRejected, setRtRRejected] = useState([
+    { value: "RT" },
+    { value: "R" },
+    { value: "Rejected" },
+  ]);
+  const [rejectCode, setRejectCode] = useState([
+    { value: "Ok" },
+    { value: "E1-Bulge" },
+    { value: "E2-Burn" },
+    { value: "E3-Dent" },
+    { value: "E4-Dig" },
+    { value: "E5-Cut " },
+    { value: "E6-Pit " },
+    { value: "E7-Line Corrosion" },
+    { value: "E8-General Corrosion" },
+    { value: "E9-Bung Thread Damaged" },
+    { value: "E10-Lose in tare Weight" },
+    { value: "E11- Identity Lost" },
+    { value: "E12-Bottom Clearance less than Limits" },
+    { value: "E13-Wall Thickness less than Limits" },
+    { value: "I1-Internal Defect Cannot be Assessed" },
+    { value: "Intersecting cut or gouge" },
+    { value: "Dent Containing cut or gouge" },
+    { value: "Crack" },
+    { value: "lamination" },
+    { value: "Bottom Shell Thickness Low" },
+    { value: "Area Corrosion" },
+    { value: "Crevice Corrosion" },
+    { value: "Failed in Hydrotest" },
+    { value: "Failed in Pneumatic Test" },
+  ]);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCylinderData = async () => {
+    const fetchSubCylinderData = async () => {
       try {
         if (!isPanelUp) {
           navigate("/maintenance");
@@ -64,7 +115,7 @@ const CylinderEdit = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${BASE_URL}/api/web-fetch-cylinder-by-id/${id}`,
+          `${BASE_URL}/api/web-fetch-cylinder-by-id-new/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -72,28 +123,43 @@ const CylinderEdit = () => {
           }
         );
 
-        const { cylinder, cylinderSub } = response.data;
-        setCylinder(cylinder);
-        setVendor(response.data?.vendor);
-        // setManufacturer(manufacturers);
-
-        // If there's a sub-cylinder ID in the query params, filter the data to get that specific sub-cylinder
-        if (subId) {
-          const selectedSubCylinder = cylinderSub.find(
-            (sub) => sub.id === parseInt(subId)
-          );
-          if (selectedSubCylinder) {
-            setSubCylinder(selectedSubCylinder);
-          }
-        }
+        setSubCylinder(response.data.cylinderSub);
       } catch (error) {
         console.error("Error fetching cylinder data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchCylinderData();
-  }, [subId]);
+    fetchSubCylinderData();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchManu = async () => {
+      try {
+        if (!isPanelUp) {
+          navigate("/maintenance");
+          return;
+        }
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${BASE_URL}/api/web-fetch-manufacturer`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setManufacturer(response.data.manufacturer);
+      } catch (error) {
+        console.error("Error fetching cylinder data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchManu();
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -103,32 +169,66 @@ const CylinderEdit = () => {
     }));
   };
 
-  const handleCylinderChange = (event) => {
-    const { name, value } = event.target;
-    setCylinder((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      let dataSubCyl = {};
+      if (branchId === "1" && userTypeId === "2") {
+        dataSubCyl = {
+          cylinder_sub_barcode: subCylinder.cylinder_sub_barcode,
+          cylinder_sub_company_no: subCylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id:
+            subCylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_month:
+            subCylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            subCylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_batch_no: subCylinder.cylinder_sub_batch_no,
+          cylinder_sub_weight: subCylinder.cylinder_sub_weight,
+        };
+      } else if (branchId === "2" && userTypeId === "2") {
+        dataSubCyl = {
+          cylinder_sub_barcode: subCylinder.cylinder_sub_barcode,
+          cylinder_sub_company_no: subCylinder.cylinder_sub_company_no,
+          cylinder_sub_manufacturer_id:
+            subCylinder.cylinder_sub_manufacturer_id,
+          cylinder_sub_manufacturer_month:
+            subCylinder.cylinder_sub_manufacturer_month,
+          cylinder_sub_manufacturer_year:
+            subCylinder.cylinder_sub_manufacturer_year,
+          cylinder_sub_batch_no: subCylinder.cylinder_sub_batch_no,
+          cylinder_sub_weight: subCylinder.cylinder_sub_weight,
+          cylinder_sub_status: subCylinder.cylinder_sub_status,
+          cylinder_sub_previous_test_date:
+            subCylinder.cylinder_sub_previous_test_date,
+          cylinder_sub_d_d: subCylinder.cylinder_sub_d_d,
+          cylinder_sub_c_d: subCylinder.cylinder_sub_c_d,
+          cylinder_sub_v_ii: subCylinder.cylinder_sub_v_ii,
+          cylinder_sub_v_ie: subCylinder.cylinder_sub_v_ie,
+          cylinder_sub_r_c: subCylinder.cylinder_sub_r_c,
+          cylinder_sub_bung_check: subCylinder.cylinder_sub_bung_check,
+          cylinder_sub_h_t: subCylinder.cylinder_sub_h_t,
+          cylinder_sub_p_p: subCylinder.cylinder_sub_p_p,
+          cylinder_sub_p: subCylinder.cylinder_sub_p,
+          cylinder_sub_n_weight: subCylinder.cylinder_sub_n_weight,
+          cylinder_sub_f_i: subCylinder.cylinder_sub_f_i,
+          cylinder_sub_p_t: subCylinder.cylinder_sub_p_t,
+          cylinder_sub_n_t_d: subCylinder.cylinder_sub_n_t_d,
+        };
+      }
       const token = localStorage.getItem("token");
       setLoading(true);
       const response = await axios.put(
-        `${BASE_URL}/api/web-update-cylinder/${id}`,
-        {
-          ...cylinder,
-          ...subCylinder,
-        },
+        `${BASE_URL}/api/web-update-cylinder-new/${id}`,
+        dataSubCyl,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      navigate(`/cylinder-view/${id}`);
+      toast.success("update successfull");
+      navigate(`/cylinder-view/${localStorage.getItem("viewedCylinderId")}`);
     } catch (error) {
       console.error("Error updating the cylinder data", error);
     } finally {
@@ -138,6 +238,22 @@ const CylinderEdit = () => {
 
   return (
     <Layout>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="p-4 sm:p-6">
         <div className="mb-6">
           <h3 className="text-xl sm:text-2xl font-bold">
@@ -149,49 +265,11 @@ const CylinderEdit = () => {
           onSubmit={handleSubmit}
           className="bg-white p-6 shadow rounded-md"
         >
-          {/* Fields for main cylinder */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-            <TextField
-              label="Date"
-              name="cylinder_date"
-              value={cylinder.cylinder_date}
-              onChange={handleCylinderChange}
-              fullWidth
-              variant="outlined"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              label="R K Batch No"
-              name="cylinder_batch_nos"
-              value={cylinder.cylinder_batch_nos}
-              onChange={handleCylinderChange}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              select
-              label="Vendor"
-              name="cylinder_vendor_id"
-              value={cylinder.cylinder_vendor_id}
-              onChange={handleCylinderChange}
-              fullWidth
-              variant="outlined"
-            >
-              {(Array.isArray(vendor) ? vendor : []).map((c_vendor, key) => (
-                <MenuItem key={key} value={c_vendor.id}>
-                  {c_vendor.vendor_name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </div>
-
           {/* Fields for sub-cylinder */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             <TextField
               label="R K Serial No"
+              disabled
               name="cylinder_sub_barcode"
               value={subCylinder.cylinder_sub_barcode}
               onChange={handleChange}
@@ -206,7 +284,7 @@ const CylinderEdit = () => {
               fullWidth
               variant="outlined"
             />
-            {/* <TextField
+            <TextField
               select
               label="Manufacturer"
               name="cylinder_sub_manufacturer_id"
@@ -217,10 +295,10 @@ const CylinderEdit = () => {
             >
               {manufacturer.map((manu) => (
                 <MenuItem key={manu.id} value={manu.id}>
-                  {manu.name}
+                  {manu.manufacturer_name}
                 </MenuItem>
               ))}
-            </TextField> */}
+            </TextField>
             <TextField
               select
               label="Month"
@@ -232,7 +310,7 @@ const CylinderEdit = () => {
             >
               {month.map((m) => (
                 <MenuItem key={m.value} value={m.value}>
-                  {m.label}
+                  {m.value}
                 </MenuItem>
               ))}
             </TextField>
@@ -260,6 +338,225 @@ const CylinderEdit = () => {
               fullWidth
               variant="outlined"
             />
+            {/* further for branch two  */}
+            {branchId === "2" && userTypeId === "2" && (
+              <>
+                <TextField
+                  select
+                  label="Status"
+                  name="cylinder_sub_status"
+                  value={subCylinder.cylinder_sub_status}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {aR.map((a) => (
+                    <MenuItem key={a.value} value={a.value}>
+                      {a.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  label="Previous Test Date"
+                  name="cylinder_sub_previous_test_date"
+                  value={subCylinder.cylinder_sub_previous_test_date}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+                <TextField
+                  // yes or no
+                  select
+                  label="Depressurization & Degassing"
+                  name="cylinder_sub_d_d"
+                  value={subCylinder.cylinder_sub_d_d}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // yes or no
+                  select
+                  label="Cleaning Done (External & Internal)"
+                  name="cylinder_sub_c_d"
+                  value={subCylinder.cylinder_sub_c_d}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // Ok, Rejected
+                  select
+                  label="Visual Inspection (Internal)"
+                  name="cylinder_sub_v_ii"
+                  value={subCylinder.cylinder_sub_v_ii}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {okRejected.map((o) => (
+                    <MenuItem key={o.value} value={o.value}>
+                      {o.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // RT, R , Rejected
+                  select
+                  label="Visual Inspection (External)"
+                  name="cylinder_sub_v_ie"
+                  value={subCylinder.cylinder_sub_v_ie}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {rtRRejected.map((r) => (
+                    <MenuItem key={r.value} value={r.value}>
+                      {r.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Rejection Code"
+                  name="cylinder_sub_r_c"
+                  value={subCylinder.cylinder_sub_r_c}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {rejectCode.map((rc) => (
+                    <MenuItem key={rc.value} value={rc.value}>
+                      {rc.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // Yes,no
+                  select
+                  label="Bung Thread Check"
+                  name="cylinder_sub_bung_check"
+                  value={subCylinder.cylinder_sub_bung_check}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // ok , rejected
+                  select
+                  label="Hydrostatic Test (25 kg/cm2)"
+                  name="cylinder_sub_h_t"
+                  value={subCylinder.cylinder_sub_h_t}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {okRejected.map((o) => (
+                    <MenuItem key={o.value} value={o.value}>
+                      {o.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // ye sor no
+                  select
+                  label="Primer + Paint"
+                  name="cylinder_sub_p_p"
+                  value={subCylinder.cylinder_sub_p_p}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // yes or no
+                  select
+                  label="Punching of new test date and repairer's identification mark"
+                  name="cylinder_sub_p"
+                  value={subCylinder.cylinder_sub_p}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  label="New Tare Weight(Kg)"
+                  name="cylinder_sub_n_weight"
+                  value={subCylinder.cylinder_sub_n_weight}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+                <TextField
+                  // yes no
+                  select
+                  label="Final Inspection for Marking Stencil Paint"
+                  name="cylinder_sub_f_i"
+                  value={subCylinder.cylinder_sub_f_i}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {yesNo.map((y) => (
+                    <MenuItem key={y.value} value={y.value}>
+                      {y.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  // ok , rejected
+                  select
+                  label="Pneumatic Test (12 kg/cm2)"
+                  name="cylinder_sub_p_t"
+                  value={subCylinder.cylinder_sub_p_t}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                >
+                  {okRejected.map((o) => (
+                    <MenuItem key={o.value} value={o.value}>
+                      {o.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  label="Next Test Date"
+                  name="cylinder_sub_n_t_d"
+                  value={subCylinder.cylinder_sub_n_t_d}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </>
+            )}
           </div>
 
           <div className="flex justify-end mt-6">
@@ -275,7 +572,9 @@ const CylinderEdit = () => {
         </form>
 
         <div className="mt-6">
-          <Link to={`/cylinder-view/${id}`}>
+          <Link
+            to={`/cylinder-view/${localStorage.getItem("viewedCylinderId")}`}
+          >
             <Button variant="outlined" color="secondary">
               Back to Cylinder View
             </Button>

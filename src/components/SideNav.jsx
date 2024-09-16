@@ -6,6 +6,15 @@ import {
 } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { useEffect, useRef } from "react";
+import {
+  MdOutlineGasMeter,
+  MdOutlinePrecisionManufacturing,
+  MdOutlineViewInAr,
+} from "react-icons/md";
+import { CiShop } from "react-icons/ci";
+import { FaShop } from "react-icons/fa6";
+import { TbReport, TbReportAnalytics, TbReportSearch } from "react-icons/tb";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavRef = useRef(null);
   const { pathname } = useLocation();
@@ -14,7 +23,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavType = "dark";
 
   const sidenavTypes = {
-    dark: "bg-gradient-to-br from-blue-800 to-blue-900 shadow-lg shadow-blue-900",
+    dark: "bg-gradient-to-br from-blue-300 to-blue-900 shadow-lg shadow-blue-900",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
@@ -48,20 +57,8 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
     >
       <div className={`relative`}>
         <Link to="/cylinder" className="flex items-center justify-center p-4">
-          <div className="flex items-center">
-            <img
-              src="https://www.ag-solutions.in/assets/images/logo.png"
-              alt="Logo"
-              className="h-12 w-auto"
-            />
-            <div className="ml-3 logo-text">
-              <div className="logo-title text-white text-lg font-bold">
-                <span className="font-black">AG</span> Solution
-              </div>
-              <div className="logo-sub-title text-gray-400 text-sm">
-                Single Click Solution
-              </div>
-            </div>
+          <div className="flex items-center bg-gradient-to-br from-blue-300 to-blue-900 rounded-lg">
+            <img src="/rkcyllogo.png" alt="Logo" className="h-12 w-auto" />
           </div>
         </Link>
         <IconButton
@@ -86,7 +83,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <MdOutlinePrecisionManufacturing className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -106,7 +103,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <FaShop className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -127,7 +124,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <MdOutlineGasMeter className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -147,7 +144,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <MdOutlineViewInAr className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -168,7 +165,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <TbReportAnalytics className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -188,7 +185,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <TbReport className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -208,7 +205,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <HiOutlineDocumentReport className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -228,7 +225,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <TbReportSearch className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
