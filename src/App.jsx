@@ -4,7 +4,6 @@ import SignIn from "./pages/auth/SignIn";
 import Maintenance from "./pages/maintenance/Maintenance";
 import ProtectedRoute from "./components/ProtectedRoute";
 // import ForgetPassword from "./pages/auth/ForgetPassword";
-// import Profile from "./pages/profile/Profile";
 // import ChangePassword from "./pages/profile/ChangePassword";
 // import Vendor from "./pages/master/vendor/Vendor";
 // import Manufacturer from "./pages/master/manufacturer/Manufacturer";
@@ -33,7 +32,6 @@ import Loader from "./components/Loader";
 // lazy
 const SIgnUp = lazy(() => import("./pages/auth/SIgnUp"));
 const ForgetPassword = lazy(() => import("./pages/auth/ForgetPassword"));
-const Profile = lazy(() => import("./pages/profile/Profile"));
 const ChangePassword = lazy(() => import("./pages/profile/ChangePassword"));
 const Vendor = lazy(() => import("./pages/master/vendor/Vendor"));
 const Cylinder = lazy(() => import("./pages/cylinder/Cylinder"));
@@ -98,20 +96,13 @@ const App = () => {
         <Route
           path="/forget-password"
           element={
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={"Loading..."}>
               <ForgetPassword />
             </Suspense>
           }
         />
         <Route path="/maintenance" element={<Maintenance />} />
-        <Route
-          path="/profile"
-          element={
-            <Suspense fallback={<Loader />}>
-              <Profile />
-            </Suspense>
-          }
-        />
+
         <Route
           path="/change-password"
           element={
@@ -250,7 +241,7 @@ const App = () => {
                 <Route
                   path="/user-view-cylinder"
                   element={
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={"Loading..."}>
                       <UserViewCylinder />
                     </Suspense>
                   }

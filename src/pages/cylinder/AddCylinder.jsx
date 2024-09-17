@@ -7,6 +7,7 @@ import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import toast, { Toaster } from "react-hot-toast";
+import DateYear from "../../utils/DateYear";
 
 const AddCylinder = () => {
   var today = new Date();
@@ -16,7 +17,7 @@ const AddCylinder = () => {
   today = mm + "/" + dd + "/" + yyyy;
   var todayback = yyyy + "-" + mm + "-" + dd;
   const [cylinder, setCylinder] = useState({
-    cylinder_year: "2023-24",
+    cylinder_year: DateYear,
     cylinder_date: todayback,
     cylinder_batch_nos: "",
     cylinder_vendor_id: "",
@@ -101,7 +102,7 @@ const AddCylinder = () => {
     setLoading(true);
     try {
       const data = {
-        cylinder_year: "2023-24",
+        cylinder_year: DateYear,
         cylinder_date: cylinder.cylinder_date,
         cylinder_vendor_id: cylinder.cylinder_vendor_id,
         cylinder_count: "0",

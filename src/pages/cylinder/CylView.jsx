@@ -36,6 +36,7 @@ const CylView = () => {
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
+  const branchId = Number(localStorage.getItem("branchId"));
 
   useEffect(() => {
     const fetchManuData = async () => {
@@ -69,14 +70,18 @@ const CylView = () => {
   }, []);
 
   const columns = [
-    {
-      name: "cylinder_sub_barcode",
-      label: "R K Serial No",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
+    ...(branchId === 1
+      ? [
+          {
+            name: "cylinder_sub_barcode",
+            label: "R K Serial No",
+            options: {
+              filter: true,
+              sort: false,
+            },
+          },
+        ]
+      : []),
     {
       name: "cylinder_sub_company_no",
       label: "Cylinder No",

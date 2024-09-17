@@ -292,17 +292,23 @@ const AddCylinderSub = () => {
         <div className="bg-white p-6 shadow rounded-md">
           <form id="addIndiv" autoComplete="off">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="mb-4">
-                <TextField
-                  id="select-corrpreffer"
-                  required
-                  label="R K Serial No"
-                  name="cylinder_sub_barcode"
-                  value={cylinder.cylinder_sub_barcode}
-                  onChange={onInputChange}
-                  fullWidth
-                />
-              </div>
+              {/* serial no  */}
+              {branchId === "1" && userTypeId === "2" && (
+                <>
+                  <div className="mb-4">
+                    <TextField
+                      id="select-corrpreffer"
+                      required
+                      label="R K Serial No"
+                      name="cylinder_sub_barcode"
+                      value={cylinder.cylinder_sub_barcode}
+                      onChange={onInputChange}
+                      fullWidth
+                    />
+                  </div>
+                </>
+              )}
+
               <div className="mb-4">
                 <TextField
                   id="select-corrpreffer"

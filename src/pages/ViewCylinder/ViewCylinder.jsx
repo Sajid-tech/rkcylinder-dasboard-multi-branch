@@ -10,6 +10,7 @@ import BASE_URL from "../../base/BaseUrl";
 
 import { IoIosQrScanner } from "react-icons/io";
 import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react";
+import ScannerModel from "../../components/ScannerModel";
 
 const ViewCylinder = () => {
   const [latestid, setLatestid] = useState("");
@@ -20,45 +21,46 @@ const ViewCylinder = () => {
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
-  // const [showmodal, setShowmodal] = useState(false);
-  // const [id, setId] = useState();
+  const [showmodal, setShowmodal] = useState(false);
+  const [id, setId] = useState();
+  const branchId = Number(localStorage.getItem("branchId"));
 
-  // const closegroupModal = () => {
-  //   console.log("Closing modal");
-  //   setShowmodal(false);
-  //   window.location.reload();
-  // };
+  const closegroupModal = () => {
+    console.log("Closing modal");
+    setShowmodal(false);
+    // window.location.reload();
+  };
 
-  // const openmodal = () => {
-  //   console.log("Opening modal");
-  //   setShowmodal(true);
-  // };
+  const openmodal = () => {
+    console.log("Opening modal");
+    setShowmodal(true);
+  };
 
-  // const barcodeScannerValue = (value) => {
-  //   console.log("Barcode scanned:", value);
-  //   setShowmodal(false);
-  //   setId(value);
-  // };
+  const barcodeScannerValue = (value) => {
+    console.log("Barcode scanned:", value);
+    setShowmodal(false);
+    setId(value);
+  };
 
   // for barcode only
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(
-  //       `${BASE_URL}/api/web-fetch-cylinder-by-scan/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     setCylinders(response.data.cylinderSub);
-  //   };
-  //   if (id) {
-  //     fetchData();
-  //     return;
-  //   }
-  // }, [id]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCylinders(response.data.cylinderSub);
+    };
+    if (id) {
+      fetchData();
+      return;
+    }
+  }, [id]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -95,23 +97,23 @@ const ViewCylinder = () => {
     }
   };
 
-  // const checkBarcode = async (value) => {
-  //   const barcodeId = value;
-  //   if (barcodeId.length === 6) {
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(
-  //       `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     setCylinders(response.data.cylinderSub);
-  //     testRef.current.focus();
-  //     setLatestid("");
-  //   }
-  // };
+  const checkBarcode = async (value) => {
+    const barcodeId = value;
+    if (barcodeId.length === 6) {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCylinders(response.data.cylinderSub);
+      testRef.current.focus();
+      setLatestid("");
+    }
+  };
 
   return (
     <Layout>
@@ -122,20 +124,27 @@ const ViewCylinder = () => {
             <form id="addIndiv" autoComplete="off" onSubmit={onSubmit}>
               <div className="flex flex-wrap">
                 <div className="w-full md:w-1/3 mb-4 flex items-center">
-                  {/* <IoIosQrScanner
-                    className="mdi mdi-barcode-scan mdi-48px menu-icon"
-                    style={{ cursor: "pointer", marginRight: "1rem" }}
-                    onClick={openmodal}
-                  ></IoIosQrScanner> */}
+                  {branchId === 1 ? (
+                    <IoIosQrScanner
+                      className="mdi mdi-barcode-scan mdi-48px menu-icon"
+                      style={{ cursor: "pointer", marginRight: "1rem" }}
+                      onClick={openmodal}
+                    ></IoIosQrScanner>
+                  ) : (
+                    ""
+                  )}
                   <TextField
                     id="select-corrpreffer"
                     autoFocus
                     inputRef={testRef}
                     required
-                    label="R K Serial No"
+                    label={branchId === 1 ? "R K Serial No" : "Cylinder No"}
                     name="cylinder_batch_nos"
                     value={latestid}
-                    onChange={(e) => setLatestid(e.target.value)}
+                    onChange={(e) => {
+                      setLatestid(e.target.value);
+                      checkBarcode(e.target.value);
+                    }}
                     fullWidth
                     variant="outlined"
                   />
@@ -239,20 +248,20 @@ const ViewCylinder = () => {
           </div>
         </div>
       </div>
-      {/* Modal for barcode scanner
+      {/* Modal for barcode scanner */}
       <Dialog open={showmodal} handler={closegroupModal} size="lg">
-        <DialogBody className="h-[400px]">
+        <DialogBody className="h-[60vh] md:h-[75vh] lg:h-[85vh] p-4 flex justify-center">
           <ScannerModel barcodeScannerValue={barcodeScannerValue} />
         </DialogBody>
-        <DialogFooter>
+        <DialogFooter className="flex justify-between">
           <button
             onClick={closegroupModal}
-            className="mr-4 px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+            className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer"
           >
             Close
           </button>
         </DialogFooter>
-      </Dialog> */}
+      </Dialog>
     </Layout>
   );
 };

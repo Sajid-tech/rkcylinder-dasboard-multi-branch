@@ -34,12 +34,12 @@ const SignIn = () => {
       if (res.status === 200) {
         const { token, user } = res.data.UserInfo;
         if (token) {
-          if (user.branch_id === 1) {
-            // Block user with branchId === 1
-            toast.error("You cannot log in. Please contact the admin.");
-            setLoading(false);
-            return;
-          }
+          // if (user.branch_id === 1) {
+          //   // Block user with branchId === 1
+          //   toast.error("You cannot log in. Please contact the admin.");
+          //   setLoading(false);
+          //   return;
+          // }
           // Store the token in localStorage
           localStorage.setItem("token", token);
           localStorage.setItem("branchId", user.branch_id);

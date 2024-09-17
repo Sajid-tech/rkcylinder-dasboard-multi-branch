@@ -1,65 +1,138 @@
 import { Input, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ContextPanel } from "../../utils/ContextPanel";
+import BASE_URL from "../../base/BaseUrl";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const ForgetPassword = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { isPanelUp } = useContext(ContextPanel);
+  const navigate = useNavigate();
+
+  const handleSumbit = async (e) => {
+    e.preventDefault();
+    if (!isPanelUp) {
+      navigate("/maintenance");
+      return;
+    }
+
+    setLoading(true);
+
+    //create a formData object and append state values
+    const formData = new FormData();
+
+    formData.append("username", username);
+    formData.append("email", email);
+
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/api/web-send-password`,
+        formData
+      );
+
+      if (res.status === 200) {
+        toast.success("Password Reset Succesfully");
+      } else {
+        toast.error("password reset, Err");
+      }
+    } catch (error) {
+      console.error("An err occured during Forget Passoword", error);
+      toast.error("An err occured during Forget Passoword");
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <section className="flex flex-col lg:flex-row min-h-screen">
-      <div className="flex-1 lg:w-3/5 m-4 lg:m-12 px-4 lg:px-8">
-        <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">
-            Forget Password
-          </Typography>
-          <Typography
-            variant="paragraph"
-            color="blue-gray"
-            className="text-lg font-normal"
-          >
-            Enter your email to reset your password.
-          </Typography>
-        </div>
-        <form className="mt-8 mb-2 mx-auto w-full max-w-md lg:w-3/4">
-          <div className="mb-6 flex flex-col gap-6">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="-mb-3 font-medium"
+    <>
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+            },
+          },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
+      <section className="bg-gradient-to-r from-blue-100 to-blue-300 min-h-screen flex items-center justify-center animate-bgShift">
+        {/* Forget Password container */}
+        <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
+          {/* Form */}
+          <div className="md:w-1/2 px-8 md:px-16">
+            <div className="flex justify-center mb-4">
+              <img
+                src="/rkcyllogo.png"
+                alt="RK Cylinder Logo"
+                className="h-14 w-auto rounded-lg"
+              />
+            </div>
+            <h2 className="font-bold text-2xl text-[#002D74]">
+              Forget Password
+            </h2>
+            <p className="text-xs mt-4 text-[#002D74]">
+              Enter your email and username to reset your password
+            </p>
+
+            <form
+              onSubmit={handleSumbit}
+              method="POST"
+              className="flex flex-col gap-4"
             >
-              Your email
-            </Typography>
-            <Input
-              id="email"
-              name="email"
-              size="lg"
-              placeholder="name@mail.com"
-              className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
+              <input
+                className="p-2 mt-2 rounded-xl border"
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+              <input
+                className="p-2 mt-2 rounded-xl border"
+                type="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+              />
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300"
+              >
+                {loading ? "Resetting..." : "Reset Password"}
+              </Button>
+            </form>
+
+            <div className="mt-5 text-xs py-4 text-[#002D74]">
+              <Link to="/" className="text-blue-600 hover:underline">
+                Back to Sign In
+              </Link>
+            </div>
+          </div>
+
+          {/* Image */}
+          <div className="md:block hidden w-1/2">
+            <img
+              className="rounded-2xl"
+              src="/logo3.png"
+              alt="Forget Password illustration"
             />
           </div>
-          <Button type="submit" className="mt-6" fullWidth>
-            Reset Password
-          </Button>
-
-          <Typography
-            variant="paragraph"
-            className="text-center text-blue-gray-500 font-medium mt-4"
-          >
-            Remembered your password?
-            <Link to="/" className="text-gray-900 ml-1">
-              Sign In
-            </Link>
-          </Typography>
-        </form>
-      </div>
-      <div className="w-full lg:w-2/5 h-auto lg:h-full hidden  lg:block">
-        <img
-          src="/img/pattern.png"
-          className="h-full max-h-screen w-full object-cover rounded-none"
-          alt="Forget Password Background"
-        />
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 };
 
