@@ -71,7 +71,7 @@ const SignIn = () => {
         toast.error("Login Failed, Please check your credentials.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("signin errr", error);
       toast.error("An error occurred during login.");
     }
 
@@ -124,7 +124,7 @@ const SignIn = () => {
                 name="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder="Mobile No"
               />
               <div className="relative">
                 <input

@@ -103,7 +103,7 @@ const ForgetPassword = () => {
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
+                placeholder="Mobile No"
               />
 
               <Button
