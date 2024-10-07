@@ -285,11 +285,11 @@ const AddCylinderSub = () => {
         position="top-right"
         reverseOrder={false}
       />
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <div className="mb-4">
-          <h3 className="text-2xl font-bold">Add Sub Cylinder</h3>
+          <h3 className="text-xl md:text-2xl font-bold">Add Sub Cylinder</h3>
         </div>
-        <div className="bg-white p-6 shadow rounded-md">
+        <div className="bg-white p-4 md:p-6 shadow rounded-md">
           <form id="addIndiv" autoComplete="off">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* serial no  */}
@@ -321,7 +321,7 @@ const AddCylinderSub = () => {
                   fullWidth
                 />
               </div>
-              <div className="mb-4 col-span-2">
+              <div className="mb-4 lg:col-span-2">
                 {cylinder.cylinder_sub_manufacturer_id !== "1" && (
                   <TextField
                     id="select-corrpreffer"
@@ -449,10 +449,10 @@ const AddCylinderSub = () => {
               )}
             </div>
 
-            <div className="flex space-x-4">
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-4">
               <Button
                 type="submit"
-                className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full md:w-auto"
                 onClick={onSubmitNext}
                 disabled={loading}
               >
@@ -467,7 +467,7 @@ const AddCylinderSub = () => {
               </Button>
               <Button
                 type="submit"
-                className="flex items-center bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                className="flex items-center bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full md:w-auto"
                 onClick={onSubmit}
                 disabled={loading}
               >
@@ -481,7 +481,7 @@ const AddCylinderSub = () => {
                 )}
               </Button>
               <Link to="/cylinder">
-                <Button className="flex items-center bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+                <Button className="flex items-center bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 w-full md:w-auto">
                   <FaTimes className="mr-2" />
                   Cancel
                 </Button>
