@@ -7,6 +7,9 @@ import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import toast, { Toaster } from "react-hot-toast";
+import { IoIosQrScanner } from "react-icons/io";
+import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react";
+import ScannerModel from "../../components/ScannerModel";
 
 const month = [
   {
@@ -82,10 +85,34 @@ const AddCylinderSub = () => {
   const [manufacturer, setManufacturer] = useState([]);
   const [branchId, setBranchId] = useState("");
   const [userTypeId, setUserTypeId] = useState("");
+  //
+  const [showmodal, setShowmodal] = useState(false);
+  //
   useEffect(() => {
     setBranchId(localStorage.getItem("branchId"));
     setUserTypeId(localStorage.getItem("userTypeId"));
   }, []);
+
+
+  const closegroupModal = () => {
+    setShowmodal(false);
+  };
+
+  const openmodal = () => {
+    setShowmodal(true);
+  };
+
+  const barcodeScannerValue = (value) => {
+    setCylinder({
+      ...cylinder,
+      cylinder_sub_barcode: value,
+    })
+  
+    setShowmodal(false);
+    // setId(value);
+    // checkBarcode(value);
+  };
+  
   useEffect(() => {
     const fetchManufactureData = async () => {
       try {
@@ -191,10 +218,10 @@ const AddCylinderSub = () => {
           cylinder_sub_n_weight: "",
         });
       } else {
-        toast.error("error");
+        toast.error("Duplicate Entry");
       }
     } catch (error) {
-      console.error("Error creating maufacturer", error);
+      console.error("Error creating Sumbit and Next add sub cylinder", error);
     } finally {
       setLoading(false);
     }
@@ -259,10 +286,10 @@ const AddCylinderSub = () => {
         toast.success("sub Cylinder Details Added");
         navigate("/cylinder");
       } else {
-        toast.error("error");
+        toast.error("Duplicate Entry");
       }
     } catch (error) {
-      console.error("Error creating maufacturer", error);
+      console.error("Error creating Add Sub Cylinder", error);
     } finally {
       setLoading(false);
     }
@@ -293,12 +320,23 @@ const AddCylinderSub = () => {
           <form id="addIndiv" autoComplete="off">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* serial no  */}
+              
               {branchId === "1" && userTypeId === "2" && (
                 <>
-                  <div className="mb-4">
+                  <div className=" flex mb-4">
+                  {branchId === '1' ? (
+                  <IoIosQrScanner
+                    className="mdi mdi-barcode-scan w-6 hover:text-red-500 h-12 mdi-48px menu-icon"
+                    style={{ cursor: "pointer", marginRight: "1rem" }}
+                    onClick={openmodal}
+                  ></IoIosQrScanner>
+                ) : (
+                  ""
+                )}
                     <TextField
                       id="select-corrpreffer"
                       required
+                      
                       label="R K Serial No"
                       name="cylinder_sub_barcode"
                       value={cylinder.cylinder_sub_barcode}
@@ -489,6 +527,20 @@ const AddCylinderSub = () => {
             </div>
           </form>
         </div>
+        {/* Modal for barcode scanner */}
+      <Dialog open={showmodal} handler={closegroupModal} size="lg">
+        <DialogBody className="h-[60vh] md:h-[75vh] lg:h-[85vh] p-4 flex justify-center">
+          <ScannerModel barcodeScannerValue={barcodeScannerValue} />
+        </DialogBody>
+        <DialogFooter className="flex justify-between">
+          <button
+            onClick={closegroupModal}
+            className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer"
+          >
+            Close
+          </button>
+        </DialogFooter>
+      </Dialog>
       </div>
     </Layout>
   );

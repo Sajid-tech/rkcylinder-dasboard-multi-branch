@@ -39,7 +39,8 @@ const ViewCylinder = () => {
   const barcodeScannerValue = (value) => {
     console.log("Barcode scanned:", value);
     setShowmodal(false);
-    setId(value);
+    // setId(value);
+    checkBarcode(value);
   };
 
   // for barcode only
@@ -97,6 +98,24 @@ const ViewCylinder = () => {
     }
   };
 
+  // const checkBarcode = async (value) => {
+  //   const barcodeId = value;
+  //   if (barcodeId.length === 6) {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setCylinders(response.data.cylinderSub);
+  //     testRef.current.focus();
+  //     setLatestid("");
+  //   }
+  // };
+
   const checkBarcode = async (value) => {
     const barcodeId = value;
     if (barcodeId.length === 6) {
@@ -109,10 +128,21 @@ const ViewCylinder = () => {
           },
         }
       );
-      setCylinders(response.data.cylinderSub);
+      if (response.data.cylinderSub.length === 0) {
+        setMessage("No cylinders found for the given ID.");
+        setCylinders([]);
+      } else {
+        setCylinders(response.data.cylinderSub);
+        setMessage("");
+      }
       testRef.current.focus();
       setLatestid("");
+    }else{
+      setMessage("Barcode Length must be 6");
     }
+    // } else if (barcodeId.length === 0) {
+    //   setMessage("Please enter a valid barcode ID.");
+    // }
   };
 
   return (
@@ -141,8 +171,14 @@ const ViewCylinder = () => {
                     label={branchId === 1 ? "R K Serial No" : "Cylinder No"}
                     name="cylinder_batch_nos"
                     value={latestid}
+                    // onChange={(e) => {
+                    //   setLatestid(e.target.value);
+                    //   checkBarcode(e.target.value);
+                    // }}
                     onChange={(e) => {
                       setLatestid(e.target.value);
+                    }}
+                    onBlur={(e) => {
                       checkBarcode(e.target.value);
                     }}
                     fullWidth

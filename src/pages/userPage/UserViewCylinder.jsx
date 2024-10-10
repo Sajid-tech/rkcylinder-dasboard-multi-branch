@@ -39,7 +39,8 @@ const UserViewCylinder = () => {
   const barcodeScannerValue = (value) => {
     console.log("Barcode scanned:", value);
     setShowmodal(false);
-    setId(value);
+    // setId(value);
+    checkBarcode(value);
   };
 
   // for barcode only
@@ -79,6 +80,7 @@ const UserViewCylinder = () => {
           },
         }
       );
+     
 
       if (response.data.cylinderSub.length === 0) {
         setMessage("No cylinders found for the given ID.");
@@ -114,10 +116,21 @@ const UserViewCylinder = () => {
           },
         }
       );
-      setCylinders(response.data.cylinderSub);
+      if (response.data.cylinderSub.length === 0) {
+        setMessage("No cylinders found for the given ID.");
+        setCylinders([]);
+      } else {
+        setCylinders(response.data.cylinderSub);
+        setMessage("");
+      }
       testRef.current.focus();
       setLatestid("");
-    }
+      }else{
+        setMessage("Barcode Length must be 6");
+      }
+    // } else if (barcodeId.length === 0) {
+    //   setMessage("Please enter a valid barcode ID.");
+    // }
   };
   return (
     <div className="p-4">
@@ -145,8 +158,14 @@ const UserViewCylinder = () => {
                   label="R K Serial No"
                   name="cylinder_batch_nos"
                   value={latestid}
+                  // onChange={(e) => {
+                  //   setLatestid(e.target.value);
+                  //   checkBarcode(e.target.value);
+                  // }}
                   onChange={(e) => {
                     setLatestid(e.target.value);
+                  }}
+                  onBlur={(e) => {
                     checkBarcode(e.target.value);
                   }}
                   fullWidth

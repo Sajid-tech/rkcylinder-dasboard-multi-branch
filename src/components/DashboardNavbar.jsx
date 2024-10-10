@@ -63,26 +63,18 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
     >
       <div className="flex  justify-between gap-6 flex-row md:items-center">
         <div className="capitalize">
-          <Breadcrumbs
-            className={`bg-transparent p-0 transition-all ${
-              fixedNavbar ? "mt-1" : ""
-            }`}
-          >
-            {breadcrumbs.map((breadcrumb, index) => (
-              <Link key={index} to={breadcrumb.link}>
+         
+       
+              <Link to='/manufacturer'>
                 <Typography
-                  variant="small"
-                  color="white"
-                  className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
+                 
+                  
+                  className="font-bold text-black  opacity-50 transition-all hover:text-red-500 hover:opacity-100"
                 >
-                  {breadcrumb.name}
+                  Home
                 </Typography>
               </Link>
-            ))}
-          </Breadcrumbs>
-          <Typography variant="h6" color="white">
-            {pageTitle}
-          </Typography>
+          
         </div>
         <div className="flex items-center">
           {/* Search and other elements can be added here */}
