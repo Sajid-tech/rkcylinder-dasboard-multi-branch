@@ -163,8 +163,7 @@ const CylView = () => {
     download: false,
     search: true,
     filter: true,
-    rowsPerPage: 5,
-    rowsPerPageOptions: [5, 10, 25],
+    // pagination: false,
     responsive: "standard",
     viewColumns: false,
   };

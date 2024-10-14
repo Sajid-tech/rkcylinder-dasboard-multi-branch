@@ -106,7 +106,7 @@ const UserViewCylinder = () => {
 
   const checkBarcode = async (value) => {
     const barcodeId = value;
-    if (barcodeId.length === 6) {
+    if (barcodeId.length == 6) {
       const token = localStorage.getItem("token");
       const response = await axios.get(
         `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
@@ -125,12 +125,25 @@ const UserViewCylinder = () => {
       }
       testRef.current.focus();
       setLatestid("");
-      }else{
-        setMessage("Barcode Length must be 6");
-      }
-    // } else if (barcodeId.length === 0) {
-    //   setMessage("Please enter a valid barcode ID.");
-    // }
+      } else   {
+        setLatestid(barcodeId)
+        setMessage("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (
+      e.key !== "Backspace" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
+      e.key !== "ArrowUp" &&
+      e.key !== "ArrowDown" &&
+      e.key !== "Tab" &&
+      e.key !== "Enter" &&
+      !e.key.match(/[0-9]/)
+    ) {
+      e.preventDefault();
+    }
   };
   return (
     <div className="p-4">
@@ -162,6 +175,8 @@ const UserViewCylinder = () => {
                   //   setLatestid(e.target.value);
                   //   checkBarcode(e.target.value);
                   // }}
+                  
+                  onKeyDown={handleKeyDown}
                   onChange={(e) => {
                     setLatestid(e.target.value);
                   }}

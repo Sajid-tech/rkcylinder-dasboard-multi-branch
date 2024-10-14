@@ -93,7 +93,6 @@ const AddCylinderSub = () => {
     setUserTypeId(localStorage.getItem("userTypeId"));
   }, []);
 
-
   const closegroupModal = () => {
     setShowmodal(false);
   };
@@ -106,13 +105,13 @@ const AddCylinderSub = () => {
     setCylinder({
       ...cylinder,
       cylinder_sub_barcode: value,
-    })
-  
+    });
+
     setShowmodal(false);
     // setId(value);
     // checkBarcode(value);
   };
-  
+
   useEffect(() => {
     const fetchManufactureData = async () => {
       try {
@@ -148,6 +147,12 @@ const AddCylinderSub = () => {
 
   const onSubmitNext = async (e) => {
     e.preventDefault();
+
+    const form = document.getElementById("addIndiv");
+    if (!form.checkValidity()) {
+      toast.error("Fill the required Filed");
+      return;
+    }
     if (!isPanelUp) {
       navigate("/maintenance");
       return;
@@ -229,6 +234,12 @@ const AddCylinderSub = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    const form = document.getElementById("addIndiv");
+
+    if (!form.checkValidity()) {
+      toast.error("Fill the required Filed");
+      return;
+    }
     if (!isPanelUp) {
       navigate("/maintenance");
       return;
@@ -294,6 +305,41 @@ const AddCylinderSub = () => {
       setLoading(false);
     }
   };
+
+  const handleKeyDown = (e) => {
+    if (
+      e.key !== "Backspace" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
+      e.key !== "ArrowUp" &&
+      e.key !== "ArrowDown" &&
+      e.key !== "Tab" &&
+      e.key !== "Enter" &&
+      !e.key.match(/[0-9]/)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const handleTareDown = (e) => {
+    if (
+      !(
+        (e.key >= "0" && e.key <= "9") ||
+        e.key === "." ||
+        e.key === "Backspace" ||
+        e.key === "Delete" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight"
+      )
+    ) {
+      e.preventDefault();
+    }
+
+    if (e.key === "." && e.target.value.includes(".")) {
+      e.preventDefault();
+    }
+  } 
+console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
   return (
     <Layout>
       <Toaster
@@ -320,24 +366,29 @@ const AddCylinderSub = () => {
           <form id="addIndiv" autoComplete="off">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* serial no  */}
-              
+
               {branchId === "1" && userTypeId === "2" && (
                 <>
                   <div className=" flex mb-4">
-                  {branchId === '1' ? (
-                  <IoIosQrScanner
-                    className="mdi mdi-barcode-scan w-6 hover:text-red-500 h-12 mdi-48px menu-icon"
-                    style={{ cursor: "pointer", marginRight: "1rem" }}
-                    onClick={openmodal}
-                  ></IoIosQrScanner>
-                ) : (
-                  ""
-                )}
+                    {branchId === "1" ? (
+                      <IoIosQrScanner
+                        className="mdi mdi-barcode-scan w-6 hover:text-red-500 h-12 mdi-48px menu-icon"
+                        style={{ cursor: "pointer", marginRight: "1rem" }}
+                        onClick={openmodal}
+                      ></IoIosQrScanner>
+                    ) : (
+                      ""
+                    )}
                     <TextField
                       id="select-corrpreffer"
                       required
-                      
                       label="R K Serial No"
+                      inputProps={{
+                        maxLength: 6,
+                        minLength: 6,
+                        pattern: "[0-9]{6}",
+                      }}
+                      onKeyDown={handleKeyDown}
                       name="cylinder_sub_barcode"
                       value={cylinder.cylinder_sub_barcode}
                       onChange={onInputChange}
@@ -356,11 +407,15 @@ const AddCylinderSub = () => {
                   name="cylinder_sub_company_no"
                   value={cylinder.cylinder_sub_company_no}
                   onChange={onInputChange}
+                  onKeyDown={handleKeyDown}
                   fullWidth
                 />
               </div>
-              <div className="mb-4 lg:col-span-2">
-                {cylinder.cylinder_sub_manufacturer_id !== "1" && (
+
+              {/* Manufacturer  */}
+              
+              <div className="mb-4 lg:col-span-2 ">
+                {(cylinder.cylinder_sub_manufacturer_id != '1' && cylinder.cylinder_sub_manufacturer_id !='513') && (
                   <TextField
                     id="select-corrpreffer"
                     required
@@ -379,7 +434,7 @@ const AddCylinderSub = () => {
                     ))}
                   </TextField>
                 )}
-                {cylinder.cylinder_sub_manufacturer_id === "1" && (
+                {(cylinder.cylinder_sub_manufacturer_id == '1' || cylinder.cylinder_sub_manufacturer_id =='513') && (
                   <TextField
                     label="Manufacturer"
                     required
@@ -390,6 +445,9 @@ const AddCylinderSub = () => {
                   />
                 )}
               </div>
+              
+
+
               <div className="mb-4">
                 <TextField
                   id="select-corrpreffer"
@@ -415,6 +473,7 @@ const AddCylinderSub = () => {
                   required
                   inputProps={{ maxLength: 2, minLength: 2 }}
                   label="Year"
+                  onKeyDown={handleKeyDown}
                   name="cylinder_sub_manufacturer_year"
                   value={cylinder.cylinder_sub_manufacturer_year}
                   onChange={onInputChange}
@@ -426,6 +485,7 @@ const AddCylinderSub = () => {
                   id="select-corrpreffer"
                   required
                   label="Batch No"
+                  // onKeyDown={handleKeyDown}
                   name="cylinder_sub_batch_no"
                   value={cylinder.cylinder_sub_batch_no}
                   onChange={onInputChange}
@@ -438,9 +498,10 @@ const AddCylinderSub = () => {
                   required
                   label="Tare Weight"
                   name="cylinder_sub_weight"
-                  inputProps={{ maxLength: 5 }}
+                  inputProps={{ maxLength: 5, pattern: "[0-9]*\\.?[0-9]*" }}
                   value={cylinder.cylinder_sub_weight}
                   onChange={onInputChange}
+                  onKeyDown={handleTareDown}
                   fullWidth
                 />
               </div>
@@ -528,19 +589,19 @@ const AddCylinderSub = () => {
           </form>
         </div>
         {/* Modal for barcode scanner */}
-      <Dialog open={showmodal} handler={closegroupModal} size="lg">
-        <DialogBody className="h-[60vh] md:h-[75vh] lg:h-[85vh] p-4 flex justify-center">
-          <ScannerModel barcodeScannerValue={barcodeScannerValue} />
-        </DialogBody>
-        <DialogFooter className="flex justify-between">
-          <button
-            onClick={closegroupModal}
-            className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer"
-          >
-            Close
-          </button>
-        </DialogFooter>
-      </Dialog>
+        <Dialog open={showmodal} handler={closegroupModal} size="lg">
+          <DialogBody className="h-[60vh] md:h-[75vh] lg:h-[85vh] p-4 flex justify-center">
+            <ScannerModel barcodeScannerValue={barcodeScannerValue} />
+          </DialogBody>
+          <DialogFooter className="flex justify-between">
+            <button
+              onClick={closegroupModal}
+              className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer"
+            >
+              Close
+            </button>
+          </DialogFooter>
+        </Dialog>
       </div>
     </Layout>
   );

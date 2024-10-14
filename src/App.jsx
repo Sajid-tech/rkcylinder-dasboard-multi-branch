@@ -59,6 +59,8 @@ const FormCylinderDetails = lazy(() =>
 const ReportCylinderDetails = lazy(() =>
   import("./pages/reports/cylinderReport/ReportCylinderDetails")
 );
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const { userInfo, setUserInfo } = useContext(ContextPanel);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,6 +85,7 @@ const App = () => {
 
   return (
     <>
+    <ToastContainer />
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route

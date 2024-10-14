@@ -11,7 +11,8 @@ import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
 import axios from "axios";
 import { ContextPanel } from "../../utils/ContextPanel";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "react-toastify";
+
 
 const CylinderEdit = () => {
   const { id } = useParams(); // Get the main cylinder ID from URL params
@@ -171,6 +172,12 @@ const CylinderEdit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const form = document.getElementById("addIndiv");
+
+    if (!form.checkValidity()) {
+      toast.error("Fill the required Filed");
+      return;
+    }
     try {
       let dataSubCyl = {};
       if (branchId === "1" && userTypeId === "2") {
@@ -227,7 +234,7 @@ const CylinderEdit = () => {
           },
         }
       );
-      toast.success("update successfull");
+      toast.success("Update Successfull")
       navigate(`/cylinder-view/${localStorage.getItem("viewedCylinderId")}`);
     } catch (error) {
       console.error("Error updating the cylinder data", error);
@@ -236,24 +243,42 @@ const CylinderEdit = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (
+      e.key !== "Backspace" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
+      e.key !== "ArrowUp" &&
+      e.key !== "ArrowDown" &&
+      e.key !== "Tab" &&
+      e.key !== "Enter" &&
+      !e.key.match(/[0-9]/)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const handleTareDown = (e) => {
+    if (
+      !(
+        (e.key >= "0" && e.key <= "9") ||
+        e.key === "." ||
+        e.key === "Backspace" ||
+        e.key === "Delete" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight"
+      )
+    ) {
+      e.preventDefault();
+    }
+
+    if (e.key === "." && e.target.value.includes(".")) {
+      e.preventDefault();
+    }
+  } 
   return (
     <Layout>
-      <Toaster
-        toastOptions={{
-          success: {
-            style: {
-              background: "green",
-            },
-          },
-          error: {
-            style: {
-              background: "red",
-            },
-          },
-        }}
-        position="top-right"
-        reverseOrder={false}
-      />
+      
       <div className="p-4 sm:p-6">
         <div className="mb-6">
           <h3 className="text-xl sm:text-2xl font-bold">
@@ -262,6 +287,7 @@ const CylinderEdit = () => {
         </div>
 
         <form
+        id="addIndiv"
           onSubmit={handleSubmit}
           className="bg-white p-6 shadow rounded-md"
         >
@@ -269,7 +295,12 @@ const CylinderEdit = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             <TextField
               label="R K Serial No"
-              disabled
+              inputProps={{
+                maxLength: 6,
+                minLength: 6,
+                pattern: "[0-9]{6}",
+              }}
+              onKeyDown={handleKeyDown}
               name="cylinder_sub_barcode"
               value={subCylinder.cylinder_sub_barcode}
               onChange={handleChange}
@@ -279,6 +310,8 @@ const CylinderEdit = () => {
             <TextField
               label="Cylinder No"
               name="cylinder_sub_company_no"
+              inputProps={{ maxLength: 10, minLength: 1 }}
+              onKeyDown={handleKeyDown}
               value={subCylinder.cylinder_sub_company_no}
               onChange={handleChange}
               fullWidth
@@ -317,6 +350,8 @@ const CylinderEdit = () => {
             <TextField
               label="Year"
               name="cylinder_sub_manufacturer_year"
+              inputProps={{ maxLength: 2, minLength: 2 }}
+              onKeyDown={handleKeyDown}
               value={subCylinder.cylinder_sub_manufacturer_year}
               onChange={handleChange}
               fullWidth
@@ -333,7 +368,9 @@ const CylinderEdit = () => {
             <TextField
               label="Tare Weight"
               name="cylinder_sub_weight"
+              inputProps={{ maxLength: 5, pattern: "[0-9]*\\.?[0-9]*" }}
               value={subCylinder.cylinder_sub_weight}
+              onKeyDown={handleTareDown}
               onChange={handleChange}
               fullWidth
               variant="outlined"
