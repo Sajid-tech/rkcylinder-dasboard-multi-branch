@@ -240,6 +240,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
           {/* Add more hardcoded routes here as needed */}
         </ul>
       </div>
+      <div className=" fixed bottom-5 left-1/4 font-bold text-black border-b border-dashed border-black   flex items-center ">Version: 1.0.7</div>
     </aside>
   );
 };

@@ -385,8 +385,8 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
                       label="R K Serial No"
                       inputProps={{
                         maxLength: 6,
-                        minLength: 6,
-                        pattern: "[0-9]{6}",
+                        minLength: 5,
+                        pattern: "[0-9]{5,6}",
                       }}
                       onKeyDown={handleKeyDown}
                       name="cylinder_sub_barcode"

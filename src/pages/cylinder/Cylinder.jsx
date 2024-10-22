@@ -93,7 +93,7 @@ const Cylinder = () => {
       label: "Date",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
         customBodyRender: (value) => {
           return Moment(value).format("DD-MM-YYYY");
         },
