@@ -104,9 +104,36 @@ const UserViewCylinder = () => {
     navigate("/");
   };
 
+  // const checkBarcode = async (value) => {
+  //   const barcodeId = value;
+  //   if (barcodeId.length == 6) {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     if (response.data.cylinderSub.length === 0) {
+  //       setMessage("No cylinders found for the given ID.");
+  //       setCylinders([]);
+  //     } else {
+  //       setCylinders(response.data.cylinderSub);
+  //       setMessage("");
+  //     }
+  //     testRef.current.focus();
+  //     setLatestid("");
+  //     } else   {
+  //       setLatestid(barcodeId)
+  //       setMessage("");
+  //   }
+  // };
+
   const checkBarcode = async (value) => {
     const barcodeId = value;
-    if (barcodeId.length == 6) {
+    if (barcodeId.length === 6 || barcodeId.length === 5) {
       const token = localStorage.getItem("token");
       const response = await axios.get(
         `${BASE_URL}/api/web-fetch-cylinder-by-scan/${barcodeId}`,
@@ -125,10 +152,12 @@ const UserViewCylinder = () => {
       }
       testRef.current.focus();
       setLatestid("");
-      } else   {
-        setLatestid(barcodeId)
-        setMessage("");
+    }else{
+      setMessage("Barcode Length must be 5 or 6");
     }
+    // } else if (barcodeId.length === 0) {
+    //   setMessage("Please enter a valid barcode ID.");
+    // }
   };
 
   const handleKeyDown = (e) => {
