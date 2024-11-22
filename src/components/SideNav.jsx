@@ -21,7 +21,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
 
   // Hardcoded sidenavType to "dark"
   const sidenavType = "dark";
-
+  const branchId = localStorage.getItem("branchId");
   const sidenavTypes = {
     dark: "bg-gradient-to-br from-blue-300 to-blue-900 shadow-lg shadow-blue-900",
     white: "bg-white shadow-sm",
@@ -156,7 +156,10 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
             </NavLink>
           </li>
           <hr />
-          <li>
+            {branchId == "2" ? "" :
+            
+            <>
+             <li>
             <NavLink to="/vendor-report">
               {({ isActive }) => (
                 <Button
@@ -176,6 +179,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
               )}
             </NavLink>
           </li>
+          
           <li>
             <NavLink to="/manufacturer-report">
               {({ isActive }) => (
@@ -196,6 +200,12 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
               )}
             </NavLink>
           </li>
+            </>
+            }
+
+         
+
+
           <li>
             <NavLink to="/cylinder-details">
               {({ isActive }) => (
@@ -216,7 +226,11 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
               )}
             </NavLink>
           </li>
-          <li>
+
+          {branchId == "2" ? "" :
+            
+            <>
+            <li>
             <NavLink to="/report-form">
               {({ isActive }) => (
                 <Button
@@ -236,11 +250,15 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
               )}
             </NavLink>
           </li>
+            </>}
+          
 
           {/* Add more hardcoded routes here as needed */}
         </ul>
       </div>
-      <div className=" fixed bottom-5 left-1/4 font-bold text-black border-b border-dashed border-black   flex items-center ">Version: 1.0.7</div>
+      <div className=" fixed bottom-5 left-1/4 font-bold text-black border-b border-dashed border-black   flex items-center ">
+        Version: 1.0.7
+      </div>
     </aside>
   );
 };

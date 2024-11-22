@@ -9,6 +9,7 @@ import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import MUIDataTable from "mui-datatables";
+import { toast } from "react-toastify";
 
 const CylView = () => {
   const { id } = useParams();
@@ -68,6 +69,46 @@ const CylView = () => {
     fetchManuData();
     setLoading(false);
   }, []);
+
+  const downloadReport = async (url, fileName) => {
+    let data = {
+      cylinder_batch_nos: cylinders.cylinder_batch_nos,
+    };
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        url,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: "blob",
+        }
+      );
+
+      const downloadUrl = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+
+      console.log(`${fileName} downloaded successfully.`);
+      // toast.success("Member data Download");
+    } catch (err) {
+      console.error(`Error downloading ${fileName}:`, err);
+      toast.error("Err on Downloading");
+    }
+  };
+
+  const handlePrint = (e) => {
+    e.preventDefault();
+    downloadReport(`${BASE_URL}/api/download-cylinder-details-report-in-view`, "subcylinderview.csv");
+    toast.success("Download SubCylinder view");
+  };
+
+  
 
   const columns = [
     ...(branchId === 1
@@ -175,7 +216,7 @@ const CylView = () => {
           <h3 className="text-xl sm:text-2xl font-bold">View Cylinder</h3>
         </div>
         <div className="bg-white p-4 sm:p-6 shadow rounded-md">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+          <div className=" flex  flex-col items-center md:flex-row lg:flex-row xl:flex-row justify-around gap-4 mb-4">
             <div className="flex items-center">
               <label className="font-bold">Date: </label>
               <span className="ml-2">
@@ -189,6 +230,12 @@ const CylView = () => {
             <div className="flex items-center">
               <label className="font-bold">Vendor: </label>
               <span className="ml-2">{vendor.vendor_name}</span>
+            </div>
+            <div
+              onClick={(e) => handlePrint(e)}
+              className="btn btn-primary text-center w-36 md:text-right text-white bg-blue-600 hover:bg-green-700 px-4 py-2 rounded-lg shadow-md"
+            >
+              Download List
             </div>
           </div>
 

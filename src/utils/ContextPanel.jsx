@@ -47,7 +47,7 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     checkPanelStatus();
-    const intervalId = setInterval(checkPanelStatus, 6000);
+    const intervalId = setInterval(checkPanelStatus, 300000);
     return () => clearInterval(intervalId);
   }, []);
 

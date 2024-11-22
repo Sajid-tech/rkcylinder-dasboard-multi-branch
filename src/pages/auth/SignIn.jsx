@@ -126,6 +126,7 @@ const SignIn = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Mobile No"
+                 autocomplete="username"
               />
               <div className="relative">
                 <input
@@ -135,6 +136,7 @@ const SignIn = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
+                  autocomplete="current-password"
                 />
                 
               </div>

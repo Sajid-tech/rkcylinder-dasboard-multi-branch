@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { FaRegFilePdf } from "react-icons/fa";
 import axios from "axios";
+import moment from "moment";
 import BASE_URL from "../../../base/BaseUrl";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import { useNavigate } from "react-router-dom";
@@ -84,6 +85,9 @@ const ReportCylinderDetails = () => {
       options: {
         filter: true,
         sort: false,
+        customBodyRender: (value) => {
+          return value ? moment(value).format("DD-MM-YYYY") : "";
+        }
       },
     },
     {
@@ -180,7 +184,7 @@ const ReportCylinderDetails = () => {
     <Layout>
       <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
         <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
-          Cylinder Details Report
+          Cylinder Details Reportssss
         </h3>
       </div>
 

@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { IoIosQrScanner } from "react-icons/io";
 import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react";
 import ScannerModel from "../../components/ScannerModel";
+import SearchableSelect from "../../components/SearchableSelect";
 
 const month = [
   {
@@ -338,8 +339,8 @@ const AddCylinderSub = () => {
     if (e.key === "." && e.target.value.includes(".")) {
       e.preventDefault();
     }
-  } 
-console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
+  };
+  console.log("manufu id", cylinder.cylinder_sub_manufacturer_id);
   return (
     <Layout>
       <Toaster
@@ -413,10 +414,20 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
               </div>
 
               {/* Manufacturer  */}
-              
+
               <div className="mb-4 lg:col-span-2 ">
-                {(cylinder.cylinder_sub_manufacturer_id != '1' && cylinder.cylinder_sub_manufacturer_id !='513') && (
-                  <TextField
+                {cylinder.cylinder_sub_manufacturer_id != "1" &&
+                  cylinder.cylinder_sub_manufacturer_id != "513" && (
+                    <>
+                      <SearchableSelect
+                        manufacturer={manufacturer}
+                        value={cylinder.cylinder_sub_manufacturer_id}
+                        onChange={onInputChange}
+                        name="cylinder_sub_manufacturer_id"
+                        label="Manufacturer"
+                        required
+                      />
+                      {/* <TextField
                     id="select-corrpreffer"
                     required
                     SelectProps={{ MenuProps: {} }}
@@ -432,9 +443,11 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
                         {c_manufacturer.manufacturer_name}
                       </MenuItem>
                     ))}
-                  </TextField>
-                )}
-                {(cylinder.cylinder_sub_manufacturer_id == '1' || cylinder.cylinder_sub_manufacturer_id =='513') && (
+                  </TextField> */}
+                    </>
+                  )}
+                {(cylinder.cylinder_sub_manufacturer_id == "1" ||
+                  cylinder.cylinder_sub_manufacturer_id == "513") && (
                   <TextField
                     label="Manufacturer"
                     required
@@ -445,8 +458,6 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
                   />
                 )}
               </div>
-              
-
 
               <div className="mb-4">
                 <TextField
@@ -496,7 +507,7 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
                 <TextField
                   id="select-corrpreffer"
                   required
-                  label="Tare Weight"
+                  label={branchId == "2" ? "Old Tare Weight" : "Tare Weight"}
                   name="cylinder_sub_weight"
                   inputProps={{ maxLength: 5, pattern: "[0-9]*\\.?[0-9]*" }}
                   value={cylinder.cylinder_sub_weight}
@@ -508,7 +519,7 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
               {/* from here it is only for branch 2  */}
               {branchId === "2" && userTypeId === "2" && (
                 <>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <TextField
                       id="select-corrpreffer"
                       required
@@ -531,7 +542,7 @@ console.log("manufu id", cylinder.cylinder_sub_manufacturer_id)
                       onChange={onInputChange}
                       fullWidth
                     />
-                  </div>
+                  </div> */}
                   <div className="mb-4">
                     <TextField
                       id="select-corrpreffer"

@@ -73,7 +73,6 @@ const CylinderEdit = () => {
   ]);
   const [rtRRejected, setRtRRejected] = useState([
     { value: "RT" },
-    { value: "R" },
     { value: "Rejected" },
   ]);
   const [rejectCode, setRejectCode] = useState([

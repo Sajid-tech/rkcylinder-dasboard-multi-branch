@@ -36,7 +36,7 @@ const FormCylinderDetails = () => {
       [name]: value,
     });
 
-    setIsButtonDisabled(!value);
+
   };
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const FormCylinderDetails = () => {
               <div className="mt-6 flex justify-start gap-5">
                 <Button
                   type="submit"
-                  className="bg-gradient-to-r from-blue-100 to-indigo-300 text-white py-2 px-4 rounded-md mr-4"
+                  className="bg-gradient-to-r from-blue-100 to-red-300 text-white py-2 px-4 rounded-md mr-4"
                   onClick={onSubmit}
                   disabled={isButtonDisabled}
                 >
